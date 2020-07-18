@@ -1,0 +1,63 @@
+extends /layouts/main
+
+block content
+    section
+        .container.mt-5
+            h1 Welcome, #{user.name}
+            a(href="/rooms/create" class="d-inline-block rounded shadow-sm border px-3 py-2 text-white bg-aqua shadow")
+                strong Create Room
+            .mt-5
+                h2 Account data
+                hr
+                form(action="/users" method="POST")
+                    input(type="hidden" name="_method" value="PUT")
+                    .mb-3
+                        label Name
+                        input(type="text" name="name" class="rounded shadow px-3 py-2 border w-100" placeholder = "Your name" value = `${user.name}` required)
+                        - var param = "name"
+                        include /components/handleInputError
+                    .mb-3.mt-5
+                        label Email
+                        input(type="text" name="email" class="rounded shadow px-3 py-2 border w-100" placeholder = "email@email.com" value = `${user.email}` required)
+                        - var param = "email"
+                        include /components/handleInputError
+                    .mb-3.mt-5
+                        label Username
+                        input(type="text" name="username" class="rounded shadow px-3 py-2 border w-100" placeholder = "Username" value = `${user.username}` required)
+                        - var param = "username"
+                        include /components/handleInputError
+                    .mb-3.mt-5
+                        button(type="submit" class="rounded shadow border px-4 py-3 mb-4 bg-aqua text-white")
+                            strong Update
+            .mt-5
+                h2 Password
+                hr
+                form(action="/auth/password" method="POST")
+                    input(type="hidden" name="_method" value="PUT")
+                    .mb-3
+                        label Current password
+                        input(type="password" name="current_password" class="rounded shadow px-3 py-2 border w-100" required placeholder = "Current password")
+                        - var param = "current_password"
+                        include /components/handleInputError
+                    .mb-3.mt-5
+                        label New password
+                        input(type="password" name="new_password" class="rounded shadow px-3 py-2 border w-100" required placeholder = "New password")
+                        - var param = "new_password"
+                        include /components/handleInputError
+                    .mb-3.mt-5
+                        label Confirm new password
+                        input(type="password" name="confirm_new_password" class="rounded shadow px-3 py-2 border w-100" required placeholder = "Confirm new password")
+                        - var param = "confirm_new_password"
+                        include /components/handleInputError
+                    .mb-3.mt-5
+                        button(type="submit" class="rounded shadow border px-4 py-3 mb-4 bg-aqua text-white")
+                            strong Update
+            .mt-5
+                h2 Danger zone
+                hr
+                form(action="/users" method="POST")
+                    input(type="hidden" name="_method" value="DELETE")
+                    .mb-3
+                        button(type="submit" class="rounded shadow border px-3 py-2 mb-4 bg-space text-white")
+                            strong Delete my account
+                

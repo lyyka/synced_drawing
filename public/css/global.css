@@ -1,0 +1,42 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+/* Background colors */
+.bg-space{
+    background-color: #343E3D;
+}
+.bg-xanadu{
+    background-color: #607466;
+}
+.bg-tgreen{
+    background-color: #AEDCC0;
+}
+.bg-emerald{
+    background-color: #7BD389;
+}
+.bg-aqua{
+    background-color: #38E4AE;
+}
+
+/* Text colors */
+.text-space{
+    color: #343E3D;
+}
+.text-xanadu{
+    color: #607466;
+}
+.text-tgreen{
+    color: #AEDCC0;
+}
+.text-emerald{
+    color: #7BD389;
+}
+.text-aqua{
+    color: #38E4AE;
+}

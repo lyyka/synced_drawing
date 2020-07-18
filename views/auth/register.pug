@@ -1,0 +1,31 @@
+extends /layouts/main
+
+block content
+    section
+        .container.mt-5
+            h1 Create an account
+            hr
+            form(action="/auth/register" method="POST")
+                .mb-3.mt-5
+                    input(type="text", name="name", class="rounded shadow px-3 py-2 border w-100 mb-2", required placeholder = "Your name", value = `${oldInput['name'] ? oldInput.value('name') : ""}`)
+                    - var param = "name";
+                    include /components/handleInputError
+                .mb-3
+                    input(type="email", name="email", class="rounded shadow px-3 py-2 border w-100 mb-2", required placeholder = "email@email.com", value = `${oldInput['email'] ? oldInput.value('email') : ""}`)
+                    - var param = "email";
+                    include /components/handleInputError
+                .mb-3
+                    input(type="text", name="username", class="rounded shadow px-3 py-2 border w-100 mb-2", required placeholder = "Username", value = `${oldInput['username'] ? oldInput.value('username') : ""}`)
+                    - var param = "username";
+                    include /components/handleInputError
+                .mb-3
+                    input(type="password" name="password" class="rounded shadow px-3 py-2 border w-100 mb-2" required placeholder = "Password")
+                    - var param = "password";
+                    include /components/handleInputError
+                .mb-3
+                    p.text-muted *You will be using username to log in to your account
+                    button(type="submit" class="rounded shadow border px-4 py-3 mb-4 bg-aqua text-white")
+                        strong Register
+                    p Already have an account? 
+                        a(href="/auth/login" class = 'text-aqua') Log in
+                

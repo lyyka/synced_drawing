@@ -1,0 +1,16 @@
+//- for msg in flash
+//-     if msg.type == "success"
+//-         div.bg-emerald.px-4.py-2.text-center
+//-             p.mb-0 #{msg.message}
+//-     else if msg.type == "error"
+//-         div.bg-tgreen.px-4.py-2.text-center
+//-             p.mb-0 #{msg.message}
+
+if successes
+    for msg in successes
+        div.bg-emerald.px-4.py-2.text-center
+            p.mb-0 #{msg}
+if errors
+    for msg in errors
+        div.bg-tgreen.px-4.py-2.text-center
+            p.mb-0 #{msg}

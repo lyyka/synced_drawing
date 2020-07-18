@@ -1,0 +1,19 @@
+extends /layouts/main
+
+block content
+    section#main
+        div.my-lg-5.my-4.container
+            .text-center
+                img(src="/images/spaceman.gif")
+            h3.text-center Use synchronized drawing board with your friends
+            .text-center.mt-5
+                if user
+                    a(href="/rooms/create" class="d-inline-block mb-3 rounded shadow-sm border px-3 py-2 text-white bg-emerald") Create Room
+                else
+                    a(href="/auth/login" class="d-inline-block mr-3 mb-3 rounded shadow-sm border px-4 py-2 text-white bg-space") Log in
+                    a(href="/auth/register" class="d-inline-block mb-3 rounded shadow-sm border px-4 py-2 text-white bg-space") Sign up
+    section#about
+        .my-lg-5.my-4.container
+            h2.text-center About the app
+            hr
+            p.text-center By creating an account on SyncedDrawing you will be able to create rooms for your friends where you can all draw on a single board and it will be synchronized between all participants.
