@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const authHelper = require("./../helpers/AuthHelper");
+const { body, validationResult } = require("express-validator");
 
 // Rooms & Users
-const { roomExists, addRoom, addUserToRoom, removeUserFromRoom, getUsersFromRoom, getRoom, getRooms } = require("./../data/Rooms");
+const { roomExists, addRoom, addUserToRoom, removeUserFromRoom, getUsersFromRoom, getRoom } = require("./../data/Rooms");
 
 const controller = (io) => {
     // Create room (GET) - Just shows the form
@@ -14,12 +15,36 @@ const controller = (io) => {
         });
     });
 
-    // Join the room
+    // Renders join room form
+    router.get("/join", authHelper.isAuthenticated, (req, res) => {
+        res.render("room/join", {
+            title: "Join a room",
+            oldInput: req.oldInput
+        });
+    });
+
+    // Join room form submission. Just redirects to /:id
+    router.post("/join", [
+        body("room_code").trim().escape().notEmpty().isAlphanumeric().withMessage("Room code is not properly formatted")
+    ], authHelper.isAuthenticated, (req, res) => {
+        const errs = validationResult(req);
+        if(!errs.isEmpty()){
+            req.flash("inputErrors", errs.array({
+                onlyFirstError: true
+            }));
+            return res.redirect("back");
+        }
+        else{
+            return res.redirect(`/rooms/${req.body.room_code.toUpperCase()}`);
+        }
+    });
+
+    // Join the room with ID
     router.get("/:id", authHelper.isAuthenticated, (req, res) => {
         const room = getRoom(req.params.id);
         if(room){
             if(room.users.length == room.max_users){
-                req.flash("error", "Room is full right now");
+                req.flash("error", "Room is full right now. Try again later");
                 return res.redirect("/");
             }
             else{
@@ -47,11 +72,12 @@ const controller = (io) => {
             }
         }
 
+        // CREATES NEW ROOM
         addRoom({
             room_code: room_code,
             name: req.body.name,
             max_users: req.body.max_users,
-            users: []
+            users: {}
         });
 
         req.flash("success", "Welcome");
@@ -60,21 +86,25 @@ const controller = (io) => {
 
     // Socket.io logic
     io.on("connection", socket => {
-        console.log(`New connection to room, sid: ${socket.id}`);
         // User joined the room
         socket.on("join_room", data => {
-            addUserToRoom(data.room_code, {
+            // ADDS USER TO ROOM
+            const user = {
                 id: socket.id,
                 username: data.username
-            });
-            console.log(getUsersFromRoom(data.room_code));
+            };
+            addUserToRoom(data.room_code, user);
+            // TODO: Emit that the user joined the room
             socket.join(data.room_code);
         });
 
         // Before leave
         socket.on("disconnecting", () => {
             Object.keys(socket.rooms).forEach(key => {
-                removeUserFromRoom(key, socket.id);
+                const user = removeUserFromRoom(key, socket.id);
+                if (user) {
+                    // TODO: Emit that the user has left the room
+                }
             });
         });
     });

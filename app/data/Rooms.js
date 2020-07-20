@@ -14,22 +14,19 @@ function addRoom(room){
 function addUserToRoom(roomId, user){
     const room = rooms[roomId];
     if(room){
-        rooms[roomId].users.push(user);
+        rooms[roomId].users[user.id] = user;
     }
 }
 
 // Removes user from room
 function removeUserFromRoom(roomId, userId){
-    const room = rooms[roomId];
-    if(room){
-        let index = -1;
-        for(let i = 0; i < room.users.length && index == -1; i++){
-            if(room.users[i].id == userId){
-                index = i;
-            }
-        }
-
-        rooms[roomId].users.splice(index, 1);
+    if (rooms[roomId] && rooms[roomId].users[userId]){
+        const user = rooms[roomId].users[userId];
+        delete rooms[roomId].users[userId];
+        return user;
+    }
+    else{
+        return undefined;
     }
 }
 
@@ -49,17 +46,11 @@ function getRoom(roomId) {
     return rooms[roomId];
 }
 
-// Returns list of all rooms - mostly for debugging
-function getRooms(){
-    return rooms;
-}
-
 module.exports = {
     roomExists,
     addRoom,
     addUserToRoom,
     removeUserFromRoom,
     getUsersFromRoom,
-    getRoom,
-    getRooms
+    getRoom
 }

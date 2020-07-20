@@ -8,7 +8,8 @@ block content
             h3.text-center Use synchronized drawing board with your friends
             .text-center.mt-5
                 if user
-                    a(href="/rooms/create" class="d-inline-block mb-3 rounded shadow-sm border px-3 py-2 text-white bg-emerald") Create Room
+                    a(href="/rooms/join" class="d-inline-block mb-3 mr-3 rounded shadow-sm border px-3 py-2 text-white bg-space") Join Room
+                    a(href="/rooms/create" class="d-inline-block mb-3 rounded shadow-sm border px-3 py-2 text-white bg-space") Create Room
                 else
                     a(href="/auth/login" class="d-inline-block mr-3 mb-3 rounded shadow-sm border px-4 py-2 text-white bg-space") Log in
                     a(href="/auth/register" class="d-inline-block mb-3 rounded shadow-sm border px-4 py-2 text-white bg-space") Sign up

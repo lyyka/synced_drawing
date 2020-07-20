@@ -4,6 +4,8 @@ block content
     section
         .container.mt-5
             h1 Welcome, #{user.name}
+            a(href="/rooms/join" class="d-inline-block rounded shadow-sm border px-3 py-2 mr-3 text-white bg-aqua shadow")
+                strong Join Room
             a(href="/rooms/create" class="d-inline-block rounded shadow-sm border px-3 py-2 text-white bg-aqua shadow")
                 strong Create Room
             .mt-5

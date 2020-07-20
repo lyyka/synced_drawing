@@ -1,0 +1,18 @@
+extends /layouts/main
+
+block content
+    section
+        .container.mt-5
+            h1 Join a room through code
+            p.text-muted You can also ask for a room URL and copy it directly in your browser. If you have only the code, you can use this form
+            hr
+            form(action="/rooms/join" method="POST")
+                .mb-3.mt-5
+                    label Room code
+                    input(type="text" name="room_code" class="rounded shadow px-3 py-2 border w-100" required placeholder = "Paste room code here" value = `${oldInput["room_code"] ? oldInput.value("room_code") : ""}`)
+                    - var param = "room_code"
+                    include /components/handleInputError
+                .mb-3.mt-5
+                    button(type="submit" class="rounded shadow border px-4 py-3 mb-4 bg-aqua text-white")
+                        strong Join!
+                
