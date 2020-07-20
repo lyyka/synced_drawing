@@ -1,17 +1,65 @@
 extends /layouts/main
 
+block styles
+    //- AWN
+    link(rel="stylesheet", href="/css/awn/style.css")
+
+    //- My css
+    link(rel="stylesheet", href="/css/room/room.css")
+
 block content
     section
         .container.mt-5
             h3.text-center
                 span #{room.name}
                 br
-                span.text-muted ##{room.room_code}
+                span#room-code-text.text-muted.cp ##{room.room_code}
             hr
+        .container-fluid.mt-4.mb-5
+            .row
+                .col-lg-9
+                    canvas#canvas.w-100.border.rounded.shadow.mb-5
+                .col-lg-3
+                    .border.shadow.rounded.mb-5
+                        .px-3.py-2.border-bottom.bg-emerald
+                            h4.text-center Messages
+                            p.text-center.mb-0
+                                span#number-of-participants 
+                                | user(s)
+                            p.text-right.h5
+                                span#show-msgs-opts.cp
+                                    //- i.fas.fa-users
+                                    i.fas.fa-info-circle
+                        .position-relative
+                            #msgs-opts.px-3.py-2.d-none.position-absolute.w-100.h-100.bg-white
+                                h5 Participants
+                                hr
+                                #users-list
+                            #messages-list.px-3.py-2
+                            #message-compose.px-3.py-2.border-top
+                                .d-table-cell.w-100
+                                    input(type="text" id = "message" name="message" class="rounded shadow-sm border px-2 py-1 form-control " placeholder="Type message...")
+                                .d-table-cell.align-middle
+                                    button(type="button" id = "send-msg-btn" class="ml-3 btn bg-emerald text-white rounded shadow-sm border ml-3") Send
+        .container-fluid.text-left.mb-4
+            #qrcode
+                                
 
 block scripts
+    //- Load user data
     script.
         const username = "#{user.username}";
+        const user_id = "#{user.id}";
         const room_code = "#{room.room_code}";
+
+    //- socket.io
     script(src="/socket.io/socket.io.js")
-    script(src="/js/room.js")
+
+    //- Notifications lib
+    script(src="/js/awn/index.var.js")
+
+    //- QR Code lib
+    script(src="/js/qrcode/qrcode.min.js")
+
+    //- My js
+    script(src="/js/room/room.js")

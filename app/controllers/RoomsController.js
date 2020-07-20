@@ -3,8 +3,10 @@ const router = express.Router();
 const authHelper = require("./../helpers/AuthHelper");
 const { body, validationResult } = require("express-validator");
 
+const SocketHandler = require("./../socketHandler");
+
 // Rooms & Users
-const { roomExists, addRoom, addUserToRoom, removeUserFromRoom, getUsersFromRoom, getRoom } = require("./../data/Rooms");
+const { roomExists, addRoom, getRoom } = require("./../data/Rooms");
 
 const controller = (io) => {
     // Create room (GET) - Just shows the form
@@ -62,7 +64,7 @@ const controller = (io) => {
     });
 
     // Create room instance (POST)
-    router.post("/", authHelper.isAuthenticated, (req, res) => {
+    router.post("/create", authHelper.isAuthenticated, (req, res) => {
         let room_code = "";
         while(room_code == "" || roomExists(room_code)){
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -72,12 +74,13 @@ const controller = (io) => {
             }
         }
 
-        // CREATES NEW ROOM
+        // ROOM OBJECT
         addRoom({
             room_code: room_code,
             name: req.body.name,
             max_users: req.body.max_users,
-            users: {}
+            users: {},
+            messages: []
         });
 
         req.flash("success", "Welcome");
@@ -86,27 +89,8 @@ const controller = (io) => {
 
     // Socket.io logic
     io.on("connection", socket => {
-        // User joined the room
-        socket.on("join_room", data => {
-            // ADDS USER TO ROOM
-            const user = {
-                id: socket.id,
-                username: data.username
-            };
-            addUserToRoom(data.room_code, user);
-            // TODO: Emit that the user joined the room
-            socket.join(data.room_code);
-        });
-
-        // Before leave
-        socket.on("disconnecting", () => {
-            Object.keys(socket.rooms).forEach(key => {
-                const user = removeUserFromRoom(key, socket.id);
-                if (user) {
-                    // TODO: Emit that the user has left the room
-                }
-            });
-        });
+        const handler = new SocketHandler(socket, io);
+        handler.startEventListeners();
     });
 
     return router;

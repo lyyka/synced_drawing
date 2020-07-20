@@ -5,7 +5,7 @@ block content
         .container.mt-5
             h1 Create room
             hr
-            form(action="/rooms" method="POST")
+            form(action="/rooms/create" method="POST")
                 .mb-3.mt-5
                     label Room name
                     input(type="text" name="name" class="rounded shadow px-3 py-2 border w-100" required placeholder = "Give your room a name" value = `${oldInput["name"] ? oldInput.value("name") : ""}`)

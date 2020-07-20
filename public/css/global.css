@@ -7,6 +7,10 @@ a:hover{
     text-decoration: none;
 }
 
+.cp{
+    cursor: pointer;
+}
+
 /* Background colors */
 .bg-space{
     background-color: #343E3D;

@@ -1,3 +1,7 @@
+// Rooms is cached value
+// Only on first require() of this model, rooms will be set to empty array.
+// NodeJS automatically caches modules, so each time we require this module, it will return reference to the first object that is now cached. It will NOT create new copies of the module.
+// That's why rooms are not cleared when we require this module in RoomsController and socketHandler.
 let rooms = [];
 
 // Checks if the given room exists
@@ -18,23 +22,24 @@ function addUserToRoom(roomId, user){
     }
 }
 
-// Removes user from room
-function removeUserFromRoom(roomId, userId){
-    if (rooms[roomId] && rooms[roomId].users[userId]){
-        const user = rooms[roomId].users[userId];
-        delete rooms[roomId].users[userId];
-        return user;
+// Add message to room
+function addMessageToRoom(roomId, message){
+    const room = rooms[roomId];
+    if (room) {
+        room.messages.push(message);
+        return true;
     }
-    else{
-        return undefined;
+    else {
+        return false;
     }
 }
 
-// Get all users in a room
-function getUsersFromRoom(roomId){
-    const room = rooms[roomId];
-    if(room){
-        return room.users;
+// Removes user from room
+function removeUserFromRoom(roomId, userId){
+    if (rooms[roomId] && rooms[roomId].users[userId]) {
+        const user = rooms[roomId].users[userId];
+        delete rooms[roomId].users[userId];
+        return user;
     }
     else{
         return undefined;
@@ -46,11 +51,23 @@ function getRoom(roomId) {
     return rooms[roomId];
 }
 
+// Gets user
+function getUser(roomId, userId){
+    const room = rooms[roomId];
+    if(room){
+        return room.users[userId];
+    }
+    else{
+        return undefined;
+    }
+}
+
 module.exports = {
     roomExists,
     addRoom,
     addUserToRoom,
+    addMessageToRoom,
     removeUserFromRoom,
-    getUsersFromRoom,
-    getRoom
+    getRoom,
+    getUser
 }
