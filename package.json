@@ -2,7 +2,7 @@
   "name": "synced-drawing",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "start http://localhost:8000 & nodemon app.js --ignore public/ --ignore views/"
