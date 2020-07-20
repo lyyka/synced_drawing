@@ -2,6 +2,8 @@ require("dotenv").config();
 
 // Express
 const express = require("express");
+const http = require("http");
+const socketio = require("socket.io");
 const methodOverride = require("method-override");
 // MongoDB
 const mongoose = require("mongoose");
@@ -19,7 +21,6 @@ const sess = {
 };
 // Path
 const path = require("path");
-// const { use } = require("passport");
 
 // MongoDB
 mongoose.connect("mongodb://localhost/synced_drawing", {
@@ -52,6 +53,8 @@ passport.deserializeUser(function (id, done) {
 
 // Express app
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
 
 // Views
 app.set("views", path.join(__dirname, "views"));
@@ -99,10 +102,10 @@ app.use(oldInput);
 app.use(require("./app/controllers/PagesController"));
 app.use("/auth", require("./app/controllers/AuthController"));
 app.use("/users", require("./app/controllers/UsersController"));
-app.use("/rooms", require("./app/controllers/RoomsController"));
+app.use("/rooms", require("./app/controllers/RoomsController")(io));
 
 // Start the app
 const port = process.env.port || 8000;
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App started on http://localhost:${port}`);
 });

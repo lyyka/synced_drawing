@@ -1,0 +1,17 @@
+extends /layouts/main
+
+block content
+    section
+        .container.mt-5
+            h3.text-center
+                span #{room.name}
+                br
+                span.text-muted ##{room.room_code}
+            hr
+
+block scripts
+    script.
+        const username = "#{user.username}";
+        const room_code = "#{room.room_code}";
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/room.js")
