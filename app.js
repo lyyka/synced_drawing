@@ -105,7 +105,7 @@ app.use("/users", require("./app/controllers/UsersController"));
 app.use("/rooms", require("./app/controllers/RoomsController")(io));
 
 // Start the app
-const port = process.env.port || 8000;
+const port = process.env.PORT || 8000;
 server.listen(port, () => {
     console.log(`App started on http://localhost:${port}`);
 });
