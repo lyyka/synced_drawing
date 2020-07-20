@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "start http://localhost:8000 & nodemon app.js --ignore public/ --ignore views/"
+    "start": "node app.js",
+    "dev": "start http://localhost:8000 & nodemon app.js --ignore public/ --ignore views/"
   },
   "author": "Luka Robajac",
   "license": "ISC",
