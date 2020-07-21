@@ -62,9 +62,11 @@ class SocketHandler{
     // Message is sent to room
     handleMessageSent(data, fn){
         if(data.message.trim().length > 0){
+            // MESSAGE OBJECT
             const msg = {
                 user: getUser(this.socket.room_code, this.socket.auth_user_id),
-                message: data.message
+                message: data.message,
+                sent_at: new Date()
             };
             if(msg.user){
                 const sent = addMessageToRoom(this.socket.room_code, msg);

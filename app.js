@@ -27,7 +27,7 @@ mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
-    console.log("Database [synced_drawing] connected");
+    console.log("Database connected");
 });
 
 // Passport - for authentication
