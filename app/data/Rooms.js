@@ -51,6 +51,13 @@ function appendPointToDrawing(point, roomId) {
     }
 }
 
+// Clear canvas
+function clearCanvas(roomId){
+    if (rooms[roomId]) {
+        rooms[roomId].lines = [];
+    }
+}
+
 // Removes user from room
 function removeUserFromRoom(roomId, userId){
     if (rooms[roomId] && rooms[roomId].users[userId]) {
@@ -86,6 +93,7 @@ module.exports = {
     addMessageToRoom,
     updateCanvas,
     appendPointToDrawing,
+    clearCanvas,
     removeUserFromRoom,
     getRoom,
     getUser

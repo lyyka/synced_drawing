@@ -1,5 +1,5 @@
 // Rooms & Users
-const { addUserToRoom, addMessageToRoom, updateCanvas, appendPointToDrawing, removeUserFromRoom, getRoom, getUser } = require("./data/Rooms");
+const { addUserToRoom, addMessageToRoom, updateCanvas, appendPointToDrawing, clearCanvas, removeUserFromRoom, getRoom, getUser } = require("./data/Rooms");
 
 class SocketHandler{
     constructor(socket, io){
@@ -14,6 +14,7 @@ class SocketHandler{
         this.handleMessageSent = this.handleMessageSent.bind(this);
         this.handleCanvasSizeChange = this.handleCanvasSizeChange.bind(this);
         this.handleMouseDrag = this.handleMouseDrag.bind(this);
+        this.handleClearCanvas = this.handleClearCanvas.bind(this);
         this.handleGetLines = this.handleGetLines.bind(this);
     }
 
@@ -28,6 +29,7 @@ class SocketHandler{
         // Drawing
         this.socket.on("sync_canvas_size", this.handleCanvasSizeChange);
         this.socket.on("sync_mouse_drag", this.handleMouseDrag);
+        this.socket.on("sync_clear_canvas", this.handleClearCanvas);
         this.socket.on("get_lines", this.handleGetLines);
 
         // Before leave
@@ -118,6 +120,13 @@ class SocketHandler{
             appendPointToDrawing(point, this.socket.room_code);
             this.io.in(this.socket.room_code).emit("drag_mouse_movement", point);
         }
+    }
+
+    // Clears the canvas
+    handleClearCanvas(callback){
+        clearCanvas(this.socket.room_code);
+        this.io.in(this.socket.room_code).emit("clear_canvas");
+        callback();
     }
 
     // Returns all ines to user

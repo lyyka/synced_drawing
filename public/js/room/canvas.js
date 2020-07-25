@@ -9,9 +9,13 @@ function setup(){
         drags.push(data);
     });
 
+    socket.on("clear_canvas", () => {
+        clear();
+    });
+
     $("#clearCanvas").click((e) => {
         $("#status").text("Saving...");
-        clear();
+        syncClearCanvas();
     });
     background(255);
 }
@@ -47,5 +51,5 @@ function loadLines(lines){
             line(ln.x, ln.y, ln.px, ln.py);
         });
     }  
-    $("#status").text(`${lines.length} lines loaded`);
+    $("#status").text(`${lines.length} points loaded. Ready!`);
 }

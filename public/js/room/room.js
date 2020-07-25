@@ -29,8 +29,6 @@ function onReady(e){
     // Update canvas size inputs
     $("#canvas_w").on("change", updateCanvasSizeEvent);
     $("#canvas_h").on("change", updateCanvasSizeEvent);
-
-    
 }
 
 function updateCanvasSizeEvent(e){

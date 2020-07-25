@@ -173,3 +173,10 @@ function updateCanvasSize(size){
 function syncMouseDragCoordinates(coords) {
     socket.emit("sync_mouse_drag", coords);
 }
+
+// Clear canvas for everybody
+function syncClearCanvas(){
+    socket.emit("sync_clear_canvas", () => {
+        $("#status").text("Ready!");
+    });
+}
