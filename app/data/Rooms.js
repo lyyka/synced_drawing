@@ -45,16 +45,16 @@ function updateCanvas(roomId, size){
 }
 
 // Update room's lines
-function appendPointToDrawing(point, roomId) {
+function appendObjectToDrawing(obj, roomId) {
     if (rooms[roomId]) {
-        rooms[roomId].lines.push(point);
+        rooms[roomId].drawing.push(obj);
     }
 }
 
 // Clear canvas
 function clearCanvas(roomId){
     if (rooms[roomId]) {
-        rooms[roomId].lines = [];
+        rooms[roomId].drawing = [];
     }
 }
 
@@ -92,7 +92,7 @@ module.exports = {
     addUserToRoom,
     addMessageToRoom,
     updateCanvas,
-    appendPointToDrawing,
+    appendObjectToDrawing,
     clearCanvas,
     removeUserFromRoom,
     getRoom,

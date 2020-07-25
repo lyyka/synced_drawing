@@ -28,16 +28,27 @@ block content
                         label Color
                         br
                         input(class="rounded shadow-sm border px-2 py-1" id="user_color" type="color")
-                    .mb-4.d-inline-block.pl-3
-                        label Brush size
+                    .mb-4.d-inline-block.px-3.border-right
+                        label Brush/Text size
                         br
                         input(class="rounded shadow-sm border px-2 py-1" id="brush_size" type="number" min = "1" max = "50")
+                    .mb-4.d-inline-block.pl-3
+                        label Tool
+                        br
+                        select(class="rounded shadow-sm border px-2 py-1" id="tool")
+                            option(value="pen") ✏ Pen
+                            option(value="text") ⌨ Text
+                            option(value="eraser") ❌ Eraser
                     //- Canvas
                     div(id="canvas" class="border rounded shadow mr-3 position-relative" style=`width: ${room.canvasSize.w}px; height: ${room.canvasSize.h}px;`)
                         div(id = "canvasBlock" class = "d-none position-absolute w-100 h-100" style = "top: 0; left: 0; background-color: rgba(0, 0, 0, 0.5);")
                     //- Status
-                    p.text-muted.mt-4#status 
-                    button(id="clearCanvas") Clear
+                    .mt-4
+                        .mb-3.d-none
+                            input(type="text" id = "add_text_input" class="rounded shadow-sm px-2 py-1 border bg-white" placeholder="Write text to add...")
+                            p Click anywhere on canvas to add the text
+                        p.text-muted#status 
+                        button(id="clearCanvas" class = "rounded shadow-sm border px-2 py-1 text-white bg-space") Clear canvas
                 .col-xl-3
                     .border.shadow.rounded.mb-5
                         .px-3.py-2.border-bottom.bg-emerald

@@ -1,5 +1,5 @@
 // Rooms & Users
-const { addUserToRoom, addMessageToRoom, updateCanvas, appendPointToDrawing, clearCanvas, removeUserFromRoom, getRoom, getUser } = require("./data/Rooms");
+const { addUserToRoom, addMessageToRoom, updateCanvas, appendObjectToDrawing, clearCanvas, removeUserFromRoom, getRoom, getUser } = require("./data/Rooms");
 
 class SocketHandler{
     constructor(socket, io){
@@ -13,9 +13,9 @@ class SocketHandler{
         this.handleDisconnecting = this.handleDisconnecting.bind(this);
         this.handleMessageSent = this.handleMessageSent.bind(this);
         this.handleCanvasSizeChange = this.handleCanvasSizeChange.bind(this);
-        this.handleMouseDrag = this.handleMouseDrag.bind(this);
+        this.handleNewObject = this.handleNewObject.bind(this);
         this.handleClearCanvas = this.handleClearCanvas.bind(this);
-        this.handleGetLines = this.handleGetLines.bind(this);
+        this.handleGetDrawing = this.handleGetDrawing.bind(this);
     }
 
     startEventListeners(){
@@ -28,9 +28,9 @@ class SocketHandler{
 
         // Drawing
         this.socket.on("sync_canvas_size", this.handleCanvasSizeChange);
-        this.socket.on("sync_mouse_drag", this.handleMouseDrag);
+        this.socket.on("sync_new_object", this.handleNewObject);
         this.socket.on("sync_clear_canvas", this.handleClearCanvas);
-        this.socket.on("get_lines", this.handleGetLines);
+        this.socket.on("get_drawing", this.handleGetDrawing);
 
         // Before leave
         this.socket.on("disconnecting", this.handleDisconnecting);
@@ -114,11 +114,11 @@ class SocketHandler{
     }
 
     // Handle mouse drag
-    handleMouseDrag(point){
+    handleNewObject(obj){
         const user = getUser(this.socket.room_code, this.socket.auth_user_id);
         if (user) {
-            appendPointToDrawing(point, this.socket.room_code);
-            this.io.in(this.socket.room_code).emit("drag_mouse_movement", point);
+            appendObjectToDrawing(obj, this.socket.room_code);
+            this.io.in(this.socket.room_code).emit("object_received", obj);
         }
     }
 
@@ -130,10 +130,10 @@ class SocketHandler{
     }
 
     // Returns all ines to user
-    handleGetLines(callback){
+    handleGetDrawing(callback){
         const room = getRoom(this.socket.room_code);
         if(room){
-            callback(room.lines);
+            callback(room.drawing);
         }
         else{
             callback(undefined);

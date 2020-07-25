@@ -83,7 +83,7 @@ const controller = (io) => {
                 w: 400,
                 h: 400,
             },
-            lines: [],
+            drawing: [],
             users: {},
             messages: []
         });

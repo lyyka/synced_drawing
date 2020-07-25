@@ -29,6 +29,22 @@ function onReady(e){
     // Update canvas size inputs
     $("#canvas_w").on("change", updateCanvasSizeEvent);
     $("#canvas_h").on("change", updateCanvasSizeEvent);
+
+    // ON tool change, show text input for text opt
+    $("#tool").on("change", updateToolEvent);
+}
+
+function updateToolEvent(e){
+    const tool = $(this).val();
+    const inp = $("#add_text_input");
+    if(tool == "text"){
+        inp.parent().removeClass("d-none");
+        inp.focus();
+    }
+    else{
+        inp.parent().addClass("d-none");
+        inp.blur();
+    }
 }
 
 function updateCanvasSizeEvent(e){

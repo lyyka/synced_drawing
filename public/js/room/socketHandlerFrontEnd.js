@@ -48,7 +48,7 @@ function joinRoom(){
 
             // Get whole drawing
             setLoading();
-            socket.emit("get_lines", loadLines);
+            socket.emit("get_drawing", loadDrawing);
         }
     });
 }
@@ -168,12 +168,12 @@ function updateCanvasSize(size){
     $("#canvas_h").val(size.h);
     resizeCanvas(size.w, size.h);
     setLoading();
-    socket.emit("get_lines", loadLines);
+    socket.emit("get_drawing", loadDrawing);
 }
 
 // Mouse drag
-function syncMouseDragCoordinates(coords) {
-    socket.emit("sync_mouse_drag", coords);
+function syncNewObject(obj) {
+    socket.emit("sync_new_object", obj);
 }
 
 // Clear canvas for everybody
