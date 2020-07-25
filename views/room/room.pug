@@ -32,7 +32,10 @@ block content
                         label Brush size
                         br
                         input(class="rounded shadow-sm border px-2 py-1" id="brush_size" type="number" min = "1" max = "50")
-                    div(id="canvas" class="border rounded shadow mr-3" style=`width: ${room.canvasSize.w}px; height: ${room.canvasSize.h}px;`)
+                    //- Canvas
+                    div(id="canvas" class="border rounded shadow mr-3 position-relative" style=`width: ${room.canvasSize.w}px; height: ${room.canvasSize.h}px;`)
+                        div(id = "canvasBlock" class = "d-none position-absolute w-100 h-100" style = "top: 0; left: 0; background-color: rgba(0, 0, 0, 0.5);")
+                    //- Status
                     p.text-muted.mt-4#status 
                     button(id="clearCanvas") Clear
                 .col-xl-3
@@ -94,6 +97,7 @@ block scripts
 
     //- My js
     script(src="/js/copy.js")
+    script(src="/js/room/statusHandler.js")
     script(src="/js/room/socketHandlerFrontEnd.js")
     script(src="/js/room/room.js")
     script(src="/js/room/messages.js")

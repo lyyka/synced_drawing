@@ -14,7 +14,6 @@ function setup(){
     });
 
     $("#clearCanvas").click((e) => {
-        $("#status").text("Saving...");
         syncClearCanvas();
     });
     background(255);
@@ -51,5 +50,5 @@ function loadLines(lines){
             line(ln.x, ln.y, ln.px, ln.py);
         });
     }  
-    $("#status").text(`${lines.length} points loaded. Ready!`);
+    setReady(`${lines.length} points loaded. Ready!`);
 }

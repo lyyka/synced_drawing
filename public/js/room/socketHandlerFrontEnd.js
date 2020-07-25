@@ -47,7 +47,7 @@ function joinRoom(){
             });
 
             // Get whole drawing
-            $("#status").text("Loading...");
+            setLoading();
             socket.emit("get_lines", loadLines);
         }
     });
@@ -167,6 +167,8 @@ function updateCanvasSize(size){
     $("#canvas_w").val(size.w);
     $("#canvas_h").val(size.h);
     resizeCanvas(size.w, size.h);
+    setLoading();
+    socket.emit("get_lines", loadLines);
 }
 
 // Mouse drag
