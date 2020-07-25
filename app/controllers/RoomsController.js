@@ -54,6 +54,7 @@ const controller = (io) => {
                     room: room,
                     title: room.name
                 };
+                console.log("Rendering...");
                 return res.render("room/room", data);
             }
         }
@@ -79,6 +80,11 @@ const controller = (io) => {
             room_code: room_code,
             name: req.body.name,
             max_users: req.body.max_users,
+            canvasSize: {
+                w: 400,
+                h: 400,
+            },
+            lines: [],
             users: {},
             messages: []
         });

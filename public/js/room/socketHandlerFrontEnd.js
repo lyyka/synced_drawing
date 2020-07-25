@@ -1,25 +1,63 @@
 const socket = io();
-const scrollingBreakpoint = 750; // Limit over which chat will not scroll down on new message
+let user = undefined;
+const scrollingBreakpoint = 750; // Limit over which chat will not scroll down on new message received
 
 // Handle when user joins the room
 // Join the room on server and get all msgs
 function joinRoom(){
     // Emit that we joined the room
-    socket.emit("join_room", {
+    const data = {
         user_id: user_id,
         username: username,
         room_code: room_code
-    });
+    };
+    socket.emit("join_room", data, (usr, messages) => {
+        if(usr){
+            // Get user object
+            user = usr;
 
-    // Get all current messages
-    // Rest of messages will update while user is on page
-    socket.emit("get_messages", updateMessages);
+            // Set color and brush size
+            $("#user_color").val(user.color);
+            $("#brush_size").val(user.brushSize);
+
+            // Update user color
+            $("#user_color").on("change", (e) => {
+                const color = $(this).val();
+                user.color = color;
+            });
+
+            // Update brush size
+            $("#brush_size").on("change", (e) => {
+                const size = $(this).val();
+                if (size >= 1 && size <= 50) {
+                    user.brushSize = size;
+                }
+            });
+
+            // Load messages
+            updateMessages(messages);
+
+            // Start event listeners
+            setEventListeners();
+
+            // This will update users only when we have set event listeners
+            // and have the user object
+            socket.emit("finalize_join", {
+                username: data.username
+            });
+
+            // Get whole drawing
+            $("#status").text("Loading...");
+            socket.emit("get_lines", loadLines);
+        }
+    });
 }
 
 // Listen for incoming events
 function setEventListeners(){
     socket.on("update_users", userJoinedOrLeft);
     socket.on("message_received", addMessageToWrap);
+    socket.on("update_canvas_size", updateCanvasSize);
 }
 
 // When user joins/leaves the room
@@ -39,7 +77,7 @@ function updateUsers(users) {
     Object.keys(users).forEach(key => {
         const txt = $("<p></p>");
         txt.addClass("mb-2");
-        txt.text(`${users[key].username} ${users[key].id == user_id ? "(You)" : ""}`);
+        txt.text(`${users[key].username} ${users[key].id == user.id ? "(You)" : ""}`);
         usrsList.append(txt);
     });
 }
@@ -95,7 +133,7 @@ function addMessageToWrap(message, ignoreScrollingBreakpoint = false){
     wrap.addClass("my-2 msg-wrap");
     // Sender text
     const sender = $("<span></span>");
-    if (message.user.id == user_id) {
+    if (message.user.id == user.id) {
         wrap.addClass("text-right");
         sender.text("Me");
         sender.addClass("text-emerald");
@@ -116,4 +154,22 @@ function addMessageToWrap(message, ignoreScrollingBreakpoint = false){
     if(list[0].scrollHeight - list.scrollTop() < scrollingBreakpoint || ignoreScrollingBreakpoint){
         list.scrollTop(list[0].scrollHeight);
     }
+}
+
+// Update canvas size
+function syncCanvasSize(size){
+    socket.emit("sync_canvas_size", size);
+}
+// -- Callback from server
+function updateCanvasSize(size){
+    $("#canvas").width(size.w);
+    $("#canvas").height(size.h);
+    $("#canvas_w").val(size.w);
+    $("#canvas_h").val(size.h);
+    resizeCanvas(size.w, size.h);
+}
+
+// Mouse drag
+function syncMouseDragCoordinates(coords) {
+    socket.emit("sync_mouse_drag", coords);
 }

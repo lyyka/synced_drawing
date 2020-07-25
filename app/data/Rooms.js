@@ -34,6 +34,23 @@ function addMessageToRoom(roomId, message){
     }
 }
 
+// Update room's canvas size
+function updateCanvas(roomId, size){
+    let updated = false;
+    if (rooms[roomId] && size.w && size.h && Object.keys(size).length == 2 && size.w >= 100 && size.w <= 10000 && size.h >= 100 && size.h <= 10000){
+        rooms[roomId].canvasSize = size;
+        updated = true;
+    }
+    return updated;
+}
+
+// Update room's lines
+function appendPointToDrawing(point, roomId) {
+    if (rooms[roomId]) {
+        rooms[roomId].lines.push(point);
+    }
+}
+
 // Removes user from room
 function removeUserFromRoom(roomId, userId){
     if (rooms[roomId] && rooms[roomId].users[userId]) {
@@ -67,6 +84,8 @@ module.exports = {
     addRoom,
     addUserToRoom,
     addMessageToRoom,
+    updateCanvas,
+    appendPointToDrawing,
     removeUserFromRoom,
     getRoom,
     getUser

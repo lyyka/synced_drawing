@@ -1,18 +1,9 @@
-const notif = new AWN({
-    maxNotifications: 3,
-    animationDuration: 200,
-    durations: {
-        global: 1800
-    }
-});
-
 $(document).ready(onReady);
 
 // When document is loaded
 function onReady(e){
     // Generate QR Code
     const qrcode = new QRCode("qrcode", {
-        // text: `${document.location.origin}/rooms/${room_code}`,
         text: room_code,
         width: 90,
         height: 90,
@@ -22,16 +13,7 @@ function onReady(e){
     });
 
     // Socket events/emits
-    setEventListeners();
     joinRoom();
-
-    // DOM Events
-    $("#send-msg-btn").click(sendMessageEvent);
-    $("#message").on("keypress", function(e){
-        if(e.which == 13){
-            sendMessageEvent(e);
-        }
-    });
 
     // Copy room code
     $("#room-code-text").click((e) => {
@@ -44,31 +26,19 @@ function onReady(e){
         });
     });
 
-    // Show options for chat
-    $("#show-msgs-opts").click(showMessageOpts);
+    // Update canvas size inputs
+    $("#canvas_w").on("change", updateCanvasSizeEvent);
+    $("#canvas_h").on("change", updateCanvasSizeEvent);
+
+    
 }
 
-// Show options for messages
-function showMessageOpts(e){
-    const opts = $("#msgs-opts");
-    if(opts.hasClass("d-none")){
-        opts.removeClass("d-none");
-        opts.addClass("d-block");
-    }
-    else{
-        opts.removeClass("d-block");
-        opts.addClass("d-none");
-    }
-}
-
-// Sends the message
-function sendMessageEvent(e){
-    const msg = $("#message").val();
-    if(msg.trim().length > 0){
-        sendMessage(msg, (data) => {
-            if (data.success) {
-                $("#message").val("");
-            }
-        })
+function updateCanvasSizeEvent(e){
+    const size = {
+        w: $("#canvas_w").val(),
+        h: $("#canvas_h").val()
+    };
+    if (size.w >= 100 && size.w <= 10000 && size.h >= 100 && size.h <= 10000){
+        syncCanvasSize(size);
     }
 }

@@ -17,9 +17,25 @@ block content
             hr
         .container-fluid.mt-4.mb-5
             .row
-                .col-lg-9
-                    canvas#canvas.w-100.border.rounded.shadow.mb-5
-                .col-lg-3
+                .col-xl-9.mb-4
+                    .mb-4.d-inline-block.pr-3.border-right
+                        label Canvas size
+                        br
+                        input(class="rounded shadow-sm border px-2 py-1" id="canvas_w" type="number" min = "100" max="10000" placeholder = "Width" value = `${room.canvasSize.w}`)
+                        span.mx-2 x
+                        input(class="rounded shadow-sm border px-2 py-1" id="canvas_h" type="number" min = "100" max="10000" placeholder = "Height" value = `${room.canvasSize.h}`)
+                    .mb-4.d-inline-block.px-3.border-right
+                        label Color
+                        br
+                        input(class="rounded shadow-sm border px-2 py-1" id="user_color" type="color")
+                    .mb-4.d-inline-block.pl-3
+                        label Brush size
+                        br
+                        input(class="rounded shadow-sm border px-2 py-1" id="brush_size" type="number" min = "1" max = "50")
+                    div(id="canvas" class="border rounded shadow mr-3" style=`width: ${room.canvasSize.w}px; height: ${room.canvasSize.h}px;`)
+                    p.text-muted.mt-4#status 
+                    button(id="clearCanvas") Clear
+                .col-xl-3
                     .border.shadow.rounded.mb-5
                         .px-3.py-2.border-bottom.bg-emerald
                             h4.text-center Messages
@@ -51,17 +67,34 @@ block scripts
         const username = "#{user.username}";
         const user_id = "#{user.id}";
         const room_code = "#{room.room_code}";
+        const canvas_size = {
+            w: "#{room.canvasSize.w}",
+            h: "#{room.canvasSize.h}"
+        };
 
     //- socket.io
     script(src="/socket.io/socket.io.js")
 
     //- Notifications lib
     script(src="/js/awn/index.var.js")
+    script.
+        const notif = new AWN({
+            maxNotifications: 3,
+            animationDuration: 200,
+            durations: {
+                global: 1800
+            }
+        });
 
     //- QR Code lib
     script(src="/js/qrcode/qrcode.min.js")
+
+    //- P5 js
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
 
     //- My js
     script(src="/js/copy.js")
     script(src="/js/room/socketHandlerFrontEnd.js")
     script(src="/js/room/room.js")
+    script(src="/js/room/messages.js")
+    script(src="/js/room/canvas.js")
