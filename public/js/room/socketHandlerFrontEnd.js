@@ -22,13 +22,13 @@ function joinRoom(){
 
             // Update user color
             $("#user_color").on("change", (e) => {
-                const color = $(this).val();
+                const color = $(e.target).val();
                 user.color = color;
             });
 
             // Update brush size
             $("#brush_size").on("change", (e) => {
-                const size = $(this).val();
+                const size = $(e.target).val();
                 if (size >= 1 && size <= 50) {
                     user.brushSize = size;
                 }

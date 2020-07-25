@@ -54,7 +54,6 @@ const controller = (io) => {
                     room: room,
                     title: room.name
                 };
-                console.log("Rendering...");
                 return res.render("room/room", data);
             }
         }

@@ -38,7 +38,6 @@ class SocketHandler{
     handleJoiningRoom(data, callback){
         const room = getRoom(data.room_code);
         if (room) {
-            console.log(`Joinging room ${data.room_code}...`);
             const getRandomColor = () => {
                 const letters = '0123456789ABCDEF';
                 let color = '#';
@@ -61,7 +60,6 @@ class SocketHandler{
             this.socket.join(this.socket.room_code);
 
             // Emit that the user has joined the room
-            console.log(`Callback join room ${data.room_code}...`);
             callback(user, room.messages);
         }
         else{
@@ -71,7 +69,6 @@ class SocketHandler{
 
     // When user joins the room
     handleFinalJoin(data) {
-        console.log(`Finalizing joining room ${this.socket.room_code}...`);
         // Emit that the user has joined the room
         this.io.in(this.socket.room_code).emit("update_users", {
             message: `${data.username} has joined the room`,
@@ -127,7 +124,6 @@ class SocketHandler{
     handleGetLines(callback){
         const room = getRoom(this.socket.room_code);
         if(room){
-            console.log(`Getting lines ${this.socket.room_code}...`);
             callback(room.lines);
         }
         else{
