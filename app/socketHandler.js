@@ -126,9 +126,18 @@ class SocketHandler {
     // Handle mouse drag
     handleNewObject(obj) {
         const user = getUser(this.socket.room_code, this.socket.auth_user_id);
+        const room = getRoom(this.socket.room_code);
         if (user) {
-            appendObjectToDrawing(obj, this.socket.room_code);
-            this.io.in(this.socket.room_code).emit("object_received", obj);
+            // Validate if points for lines are still inside canvas
+            let points_valid = true;
+            if(obj.type == "line"){
+                points_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <=room.canvasSize.h;              
+            }
+
+            if(points_valid){
+                appendObjectToDrawing(obj, this.socket.room_code);
+                this.io.in(this.socket.room_code).emit("object_received", obj);
+            }
         }
     }
 

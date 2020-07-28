@@ -6,6 +6,7 @@ body {
 /* Canvas */
 #canvas {
     touch-action: none;
+    cursor: none;
 }
 
 #canvas_w,

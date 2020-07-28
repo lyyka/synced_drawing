@@ -130,21 +130,36 @@ function onMouseMove() {
     // Load all drawings
     loadDrawing(all);
     // Draw the circle around the cursor
-    if (tool == "circle") {
-        fill(user.color);
-    } else {
-        noFill();
-    }
+    // If it's text, draw guidelines instead of circle
     stroke(0);
     strokeWeight(2);
-    circle(mouseX, mouseY, user.size);
+    if (tool == "text") {
+        const size = Number(user.size);
+        const to_render = $("#add_text_input").val();
+        let width = size;
+        if(to_render.trim().length > 0){
+            textSize(size);
+            width = textWidth();
+        }
+        const height = size * 0.75;
+        line(mouseX, mouseY, mouseX + width, mouseY);
+        line(mouseX, mouseY, mouseX, mouseY - height);
+    } else {
+        // Fill the guiding circle if we are going to draw a circle
+        if (tool == "circle") {
+            fill(user.color);
+        } else {
+            noFill();
+        }
+        circle(mouseX, mouseY, user.size);
+    }
 }
 
 // Sync new point
 function mouseDragged() {
     // Mouse drag events get reigstered everywhere. Limit the inside the canvas scope.
     const csize = getCanvasSize();
-    if(mouseX >= 0 && mouseX <= csize.w && mouseY >=0 && mouseY <= csize.h){
+    if (mouseX >= 0 && mouseX <= csize.w && mouseY >= 0 && mouseY <= csize.h) {
         const tool = $("#tool").val();
         if (tool == "pen" || tool == "eraser") {
             let data = {
@@ -164,7 +179,7 @@ function mouseDragged() {
             rect(Math.min(start.x, mouseX), Math.min(start.y, mouseY), Math.abs(mouseX - start.x), Math.abs(mouseY - start.y));
         }
     }
-    
+
 }
 
 // Clear circle around cursor
@@ -177,6 +192,7 @@ function onMouseOut() {
 
 // Load drawing from server
 function loadDrawing(objs) {
+    // First time loading the drawing
     if (all.length == 0) {
         all = all.concat(objs);
     }
@@ -211,7 +227,7 @@ function drawObject(obj) {
 }
 
 // Returns the canvas size
-function getCanvasSize(){
+function getCanvasSize() {
     return {
         w: $("#canvas_w").val(),
         h: $("#canvas_h").val()
