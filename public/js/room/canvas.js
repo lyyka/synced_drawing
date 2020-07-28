@@ -137,31 +137,34 @@ function onMouseMove() {
     }
     stroke(0);
     strokeWeight(2);
-    circle(mouseX, mouseY, user.size, user.size);
+    circle(mouseX, mouseY, user.size);
 }
 
 // Sync new point
 function mouseDragged() {
-    const tool = $("#tool").val();
-    if (tool == "pen" || tool == "eraser") {
-        let data = {
-            x: mouseX,
-            y: mouseY,
-            px: pmouseX,
-            py: pmouseY,
-            color: tool == "pen" ? user.color : "#ffffff",
-            size: user.size,
-            type: "line"
-        };
-        if (data.x >= 0 && data.y >= 0) {
+    // Mouse drag events get reigstered everywhere. Limit the inside the canvas scope.
+    const csize = getCanvasSize();
+    if(mouseX >= 0 && mouseX <= csize.w && mouseY >=0 && mouseY <= csize.h){
+        const tool = $("#tool").val();
+        if (tool == "pen" || tool == "eraser") {
+            let data = {
+                x: mouseX,
+                y: mouseY,
+                px: pmouseX,
+                py: pmouseY,
+                color: tool == "pen" ? user.color : "#ffffff",
+                size: user.size,
+                type: "line"
+            };
             syncNewObject(data);
+        } else if (tool == "rectangle" && start) {
+            // Real-time draw rect while dragging, mouseMove takes care of clearing/redrawing canvas
+            fill(user.color);
+            strokeWeight(0);
+            rect(Math.min(start.x, mouseX), Math.min(start.y, mouseY), Math.abs(mouseX - start.x), Math.abs(mouseY - start.y));
         }
-    } else if (tool == "rectangle" && start) {
-        // Real-time draw rect while dragging, mouseMove takes care of clearing/redrawing canvas
-        fill(user.color);
-        strokeWeight(0);
-        rect(Math.min(start.x, mouseX), Math.min(start.y, mouseY), Math.abs(mouseX - start.x), Math.abs(mouseY - start.y));
     }
+    
 }
 
 // Clear circle around cursor
@@ -205,4 +208,12 @@ function drawObject(obj) {
         fill(obj.color);
         rect(Math.min(obj.start.x, obj.end.x), Math.min(obj.start.y, obj.end.y), Math.abs(obj.end.x - obj.start.x), Math.abs(obj.end.y - obj.start.y));
     }
+}
+
+// Returns the canvas size
+function getCanvasSize(){
+    return {
+        w: $("#canvas_w").val(),
+        h: $("#canvas_h").val()
+    };
 }
