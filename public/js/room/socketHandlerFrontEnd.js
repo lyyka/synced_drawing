@@ -4,7 +4,7 @@ const scrollingBreakpoint = 750; // Limit over which chat will not scroll down o
 
 // Handle when user joins the room
 // Join the room on server and get all msgs
-function joinRoom(){
+function joinRoom() {
     // Emit that we joined the room
     const data = {
         user_id: user_id,
@@ -12,7 +12,7 @@ function joinRoom(){
         room_code: room_code
     };
     socket.emit("join_room", data, (usr, messages) => {
-        if(usr){
+        if (usr) {
             // Get user object
             user = usr;
 
@@ -54,14 +54,14 @@ function joinRoom(){
 }
 
 // Listen for incoming events
-function setEventListeners(){
+function setEventListeners() {
     socket.on("update_users", userJoinedOrLeft);
     socket.on("message_received", addMessageToWrap);
     socket.on("update_canvas_size", updateCanvasSize);
 }
 
 // When user joins/leaves the room
-function userJoinedOrLeft(data){
+function userJoinedOrLeft(data) {
     // Update users list and users count
     updateUsers(data.users)
 
@@ -83,7 +83,7 @@ function updateUsers(users) {
 }
 
 // Sends the message
-function sendMessage(message, callback){
+function sendMessage(message, callback) {
     socket.emit("send_message", {
         message: message
     }, callback);
@@ -96,8 +96,7 @@ function updateMessages(messages) {
             messages.forEach(msg => {
                 addMessageToWrap(msg, true);
             });
-        }
-        else {
+        } else {
             const list = $("#messages-list");
             // Empty messages
             const wrap = $("<div></div>");
@@ -116,52 +115,62 @@ function updateMessages(messages) {
             wrap.append(msg);
             list.append(wrap);
         }
-    }
-    else {
+    } else {
         notif.alert("Error retreiving messages");
     }
 }
 
 // Add one msg bubble to chat
-function addMessageToWrap(message, ignoreScrollingBreakpoint = false){
+function addMessageToWrap(message, ignoreScrollingBreakpoint = false) {
     // Remove img for no msgs if any
     const list = $("#messages-list");
     list.find("#no-msgs-img").remove();
 
+    // Parses the message for any URL to convert it into clickable link
+    const parse_message = (text) => {
+        var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(urlRegex, function (url) {
+            return `<a target = "_blank" href="${url}">${url}</a>`;
+        });
+    };
+
     // wrap = sender + bubble
     const wrap = $("<div></div>");
     wrap.addClass("my-2 msg-wrap");
+
     // Sender text
     const sender = $("<span></span>");
     if (message.user.id == user.id) {
         wrap.addClass("text-right");
         sender.text("Me");
         sender.addClass("text-emerald");
-    }
-    else {
+    } else {
         sender.text(message.user.username);
     }
+
     // Bubble
     const bubble = $("<span></span>");
     bubble.addClass("d-inline-block px-2 py-1 msg-bubble rounded shadow-sm border");
-    bubble.text(message.message);
+    bubble.html(parse_message(message.message));
 
+    // Merge all into wrap
     wrap.append(sender);
     wrap.append("<br />");
     wrap.append(bubble);
 
+    // Add wrap and scroll if needed
     list.append(wrap);
-    if(list[0].scrollHeight - list.scrollTop() < scrollingBreakpoint || ignoreScrollingBreakpoint){
+    if (list[0].scrollHeight - list.scrollTop() < scrollingBreakpoint || ignoreScrollingBreakpoint) {
         list.scrollTop(list[0].scrollHeight);
     }
 }
 
 // Update canvas size
-function syncCanvasSize(size){
+function syncCanvasSize(size) {
     socket.emit("sync_canvas_size", size);
 }
 // -- Callback from server
-function updateCanvasSize(size){
+function updateCanvasSize(size) {
     $("#canvas").width(size.w);
     $("#canvas").height(size.h);
     $("#canvas_w").val(size.w);
@@ -177,7 +186,7 @@ function syncNewObject(obj) {
 }
 
 // Clear canvas for everybody
-function syncClearCanvas(){
+function syncClearCanvas() {
     socket.emit("sync_clear_canvas", () => {
         $("#status").text("Ready!");
     });

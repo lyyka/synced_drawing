@@ -24,33 +24,42 @@ const path = require("path");
 
 // MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => {
-    console.log("Database connected");
-})
-.catch((err) => {
-    console.log(`Error ${err.message}`);
-});
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => {
+        console.log("Database connected");
+    })
+    .catch((err) => {
+        console.log(`Error ${err.message}`);
+    });
 
 // Passport - for authentication
 passport.use(new LocalStrategy(function (username, password, done) {
-        User.findOne({ username: username }, function (err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            if (!user.verifyPassword(password)) { return done(null, false); }
-            return done(null, user);
-        });
-    }
-));
+    User.findOne({
+        username: username
+    }, function (err, user) {
+        if (err) {
+            return done(err);
+        }
+        if (!user) {
+            return done(null, false);
+        }
+        if (!user.verifyPassword(password)) {
+            return done(null, false);
+        }
+        return done(null, user);
+    });
+}));
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-    User.findOne({ _id: mongoose.Types.ObjectId(id) }, function (err, user) {
+    User.findOne({
+        _id: mongoose.Types.ObjectId(id)
+    }, function (err, user) {
         done(err, user);
     });
 });
@@ -69,7 +78,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.locals.basedir = app.get("views");
 
 // Basic express / methodOverride setup
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+    extended: true
+}));
 app.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
@@ -95,7 +106,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use((req, res, next) => {
-    if(req.user){
+    if (req.user) {
         res.locals.user = req.user; // always have user in pug views
     }
     next();

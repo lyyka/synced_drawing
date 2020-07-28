@@ -1,46 +1,54 @@
-body{
+body {
     margin: 0;
     padding: 0;
 }
 
-a:hover{
+a:hover {
     text-decoration: none;
 }
 
-.cp{
+.cp {
     cursor: pointer;
 }
 
 /* Background colors */
-.bg-space{
+.bg-space {
     background-color: #343E3D;
 }
-.bg-xanadu{
+
+.bg-xanadu {
     background-color: #607466;
 }
-.bg-tgreen{
+
+.bg-tgreen {
     background-color: #AEDCC0;
 }
-.bg-emerald{
+
+.bg-emerald {
     background-color: #7BD389;
 }
-.bg-aqua{
+
+.bg-aqua {
     background-color: #38E4AE;
 }
 
 /* Text colors */
-.text-space{
+.text-space {
     color: #343E3D;
 }
-.text-xanadu{
+
+.text-xanadu {
     color: #607466;
 }
-.text-tgreen{
+
+.text-tgreen {
     color: #AEDCC0;
 }
-.text-emerald{
+
+.text-emerald {
     color: #7BD389;
 }
-.text-aqua{
+
+.text-aqua {
     color: #38E4AE;
 }

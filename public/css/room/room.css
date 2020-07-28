@@ -1,39 +1,51 @@
-html, body{
+html,
+body {
     overflow-x: auto;
 }
+
 /* Canvas */
-#canvas{
+#canvas {
     touch-action: none;
 }
-#canvas_w, #canvas_h, #brush_size{
+
+#canvas_w,
+#canvas_h,
+#brush_size {
     width: 100px;
 }
 
-@media screen and (max-width: 756px){
-    #canvas_w, #canvas_h, #brush_size{
+@media screen and (max-width: 756px) {
+
+    #canvas_w,
+    #canvas_h,
+    #brush_size {
         width: 75px;
     }
 }
 
 /* Help buttons */
-.help-btn{
+.help-btn {
     width: 20px;
     height: 20px;
 }
 
 /* Messages */
-#msgs-opts{
+#msgs-opts {
     max-height: 100%;
     overflow-y: auto;
 }
-#messages-list{
+
+#messages-list {
     height: 500px;
     max-height: 500px;
     overflow-y: auto;
 }
-#no-msgs-img > img{
+
+#no-msgs-img>img {
     max-height: 100px;
 }
-.msg-bubble{
+
+.msg-bubble {
     max-width: 50%;
+    word-wrap: break-word;
 }

@@ -21,8 +21,7 @@ function showMessageOpts(e) {
     if (opts.hasClass("d-none")) {
         opts.removeClass("d-none");
         opts.addClass("d-block");
-    }
-    else {
+    } else {
         opts.removeClass("d-block");
         opts.addClass("d-none");
     }

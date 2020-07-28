@@ -1,8 +1,17 @@
 // Rooms & Users
-const { addUserToRoom, addMessageToRoom, updateCanvas, appendObjectToDrawing, clearCanvas, removeUserFromRoom, getRoom, getUser } = require("./data/Rooms");
+const {
+    addUserToRoom,
+    addMessageToRoom,
+    updateCanvas,
+    appendObjectToDrawing,
+    clearCanvas,
+    removeUserFromRoom,
+    getRoom,
+    getUser
+} = require("./data/Rooms");
 
-class SocketHandler{
-    constructor(socket, io){
+class SocketHandler {
+    constructor(socket, io) {
         this.socket = socket;
         this.io = io;
 
@@ -18,7 +27,7 @@ class SocketHandler{
         this.handleGetDrawing = this.handleGetDrawing.bind(this);
     }
 
-    startEventListeners(){
+    startEventListeners() {
         // User joined the room
         this.socket.on("join_room", this.handleJoiningRoom);
         this.socket.on("finalize_join", this.handleFinalJoin);
@@ -37,7 +46,7 @@ class SocketHandler{
     }
 
     // When user joins the room
-    handleJoiningRoom(data, callback){
+    handleJoiningRoom(data, callback) {
         const room = getRoom(data.room_code);
         if (room) {
             const getRandomColor = () => {
@@ -63,8 +72,7 @@ class SocketHandler{
 
             // Emit that the user has joined the room
             callback(user, room.messages);
-        }
-        else{
+        } else {
             callback(undefined, undefined);
         }
     }
@@ -79,15 +87,15 @@ class SocketHandler{
     }
 
     // Message is sent to room
-    handleMessageSent(data, fn){
-        if(data.message.trim().length > 0){
+    handleMessageSent(data, fn) {
+        if (data.message.trim().length > 0) {
             // MESSAGE OBJECT
             const msg = {
                 user: getUser(this.socket.room_code, this.socket.auth_user_id),
                 message: data.message,
                 sent_at: new Date()
             };
-            if(msg.user){
+            if (msg.user) {
                 const sent = addMessageToRoom(this.socket.room_code, msg);
                 if (sent) {
                     this.io.in(this.socket.room_code).emit("message_received", msg);
@@ -95,26 +103,28 @@ class SocketHandler{
                         success: true
                     });
                 }
+            } else {
+                fn({
+                    success: false
+                });
             }
-            else{
-                fn({ success: false });
-            }
-        }
-        else{
-            fn({ success: false });
+        } else {
+            fn({
+                success: false
+            });
         }
     }
 
     // Handle canvas size change
-    handleCanvasSizeChange(size){
+    handleCanvasSizeChange(size) {
         const updated = updateCanvas(this.socket.room_code, size);
-        if(updated){
+        if (updated) {
             this.io.in(this.socket.room_code).emit("update_canvas_size", size);
         }
     }
 
     // Handle mouse drag
-    handleNewObject(obj){
+    handleNewObject(obj) {
         const user = getUser(this.socket.room_code, this.socket.auth_user_id);
         if (user) {
             appendObjectToDrawing(obj, this.socket.room_code);
@@ -123,25 +133,24 @@ class SocketHandler{
     }
 
     // Clears the canvas
-    handleClearCanvas(callback){
+    handleClearCanvas(callback) {
         clearCanvas(this.socket.room_code);
         this.io.in(this.socket.room_code).emit("clear_canvas");
         callback();
     }
 
     // Returns all ines to user
-    handleGetDrawing(callback){
+    handleGetDrawing(callback) {
         const room = getRoom(this.socket.room_code);
-        if(room){
+        if (room) {
             callback(room.drawing);
-        }
-        else{
+        } else {
             callback(undefined);
         }
     }
 
     // When user disconnects
-    handleDisconnecting(){
+    handleDisconnecting() {
         Object.keys(this.socket.rooms).forEach(key => {
             const user = removeUserFromRoom(key, this.socket.auth_user_id);
             if (user) {

@@ -5,39 +5,38 @@
 let rooms = [];
 
 // Checks if the given room exists
-function roomExists(roomId){
+function roomExists(roomId) {
     return rooms[roomId] != undefined;
 }
 
 // Adds new room to array
-function addRoom(room){
+function addRoom(room) {
     rooms[room.room_code] = room;
 }
 
 // Adds new user to room
-function addUserToRoom(roomId, user){
+function addUserToRoom(roomId, user) {
     const room = rooms[roomId];
-    if(room){
+    if (room) {
         rooms[roomId].users[user.id] = user;
     }
 }
 
 // Add message to room
-function addMessageToRoom(roomId, message){
+function addMessageToRoom(roomId, message) {
     const room = rooms[roomId];
     if (room) {
         room.messages.push(message);
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 // Update room's canvas size
-function updateCanvas(roomId, size){
+function updateCanvas(roomId, size) {
     let updated = false;
-    if (rooms[roomId] && size.w && size.h && Object.keys(size).length == 2 && size.w >= 100 && size.w <= 10000 && size.h >= 100 && size.h <= 10000){
+    if (rooms[roomId] && size.w && size.h && Object.keys(size).length == 2 && size.w >= 100 && size.w <= 10000 && size.h >= 100 && size.h <= 10000) {
         rooms[roomId].canvasSize = size;
         updated = true;
     }
@@ -52,20 +51,19 @@ function appendObjectToDrawing(obj, roomId) {
 }
 
 // Clear canvas
-function clearCanvas(roomId){
+function clearCanvas(roomId) {
     if (rooms[roomId]) {
         rooms[roomId].drawing = [];
     }
 }
 
 // Removes user from room
-function removeUserFromRoom(roomId, userId){
+function removeUserFromRoom(roomId, userId) {
     if (rooms[roomId] && rooms[roomId].users[userId]) {
         const user = rooms[roomId].users[userId];
         delete rooms[roomId].users[userId];
         return user;
-    }
-    else{
+    } else {
         return undefined;
     }
 }
@@ -76,12 +74,11 @@ function getRoom(roomId) {
 }
 
 // Gets user
-function getUser(roomId, userId){
+function getUser(roomId, userId) {
     const room = rooms[roomId];
-    if(room){
+    if (room) {
         return room.users[userId];
-    }
-    else{
+    } else {
         return undefined;
     }
 }

@@ -7,7 +7,7 @@ let all = [];
 // For rectangle drag draw
 let start;
 
-function setup(){
+function setup() {
     // Create canvas
     let cnv = createCanvas(canvas_size.w, canvas_size.h);
     cnv.parent("canvas");
@@ -47,7 +47,7 @@ function setup(){
     background(255);
 }
 
-function draw(){
+function draw() {
     objs.forEach(obj => {
         drawObject(obj);
     });
@@ -55,13 +55,13 @@ function draw(){
 }
 
 // Add text on click
-function onMouseClick(){
+function onMouseClick() {
     const tool = $("#tool").val();
     // Add text to canvas
     if (tool == "text") {
         const inp = $("#add_text_input");
         const textToAdd = inp.val();
-        if(textToAdd.trim().length > 0){
+        if (textToAdd.trim().length > 0) {
             const data = {
                 x: mouseX,
                 y: mouseY,
@@ -73,12 +73,10 @@ function onMouseClick(){
             if (data.x >= 0 && data.y >= 0) {
                 syncNewObject(data);
             }
-        }
-        else{
+        } else {
             inp.focus();
         }
-    }
-    else if(tool == "circle"){
+    } else if (tool == "circle") {
         const data = {
             x: mouseX,
             y: mouseY,
@@ -92,7 +90,7 @@ function onMouseClick(){
     }
 }
 
-function onMousePressed(){
+function onMousePressed() {
     const tool = $("#tool").val();
     // On press, begin rectangle drag draw
     if (tool == "rectangle" && !start) {
@@ -105,10 +103,10 @@ function onMousePressed(){
     return false;
 }
 
-function onMouseReleased(){
+function onMouseReleased() {
     const tool = $("#tool").val();
     // Save release coords for drawing rect
-    if (tool == "rectangle" && start){
+    if (tool == "rectangle" && start) {
         const data = {
             start: start,
             end: {
@@ -124,18 +122,17 @@ function onMouseReleased(){
     }
 }
 
-function onMouseMove(){
-    $("#pos").text(`${mouseX}, ${mouseY}`);
+function onMouseMove() {
+    $("#pos").text(`Position: ${mouseX}, ${mouseY}`);
     const tool = $("#tool").val();
     // clear bg
     background(255);
     // Load all drawings
     loadDrawing(all);
     // Draw the circle around the cursor
-    if(tool == "circle"){
+    if (tool == "circle") {
         fill(user.color);
-    }
-    else{
+    } else {
         noFill();
     }
     stroke(0);
@@ -146,7 +143,7 @@ function onMouseMove(){
 // Sync new point
 function mouseDragged() {
     const tool = $("#tool").val();
-    if(tool == "pen" || tool == "eraser"){
+    if (tool == "pen" || tool == "eraser") {
         let data = {
             x: mouseX,
             y: mouseY,
@@ -159,8 +156,7 @@ function mouseDragged() {
         if (data.x >= 0 && data.y >= 0) {
             syncNewObject(data);
         }
-    }
-    else if(tool == "rectangle" && start){
+    } else if (tool == "rectangle" && start) {
         // Real-time draw rect while dragging, mouseMove takes care of clearing/redrawing canvas
         fill(user.color);
         strokeWeight(0);
@@ -169,7 +165,7 @@ function mouseDragged() {
 }
 
 // Clear circle around cursor
-function onMouseOut(){
+function onMouseOut() {
     // clear bg
     background(255);
     // Load all drawings
@@ -177,8 +173,8 @@ function onMouseOut(){
 }
 
 // Load drawing from server
-function loadDrawing(objs){
-    if(all.length == 0){
+function loadDrawing(objs) {
+    if (all.length == 0) {
         all = all.concat(objs);
     }
     if (objs) {
@@ -186,28 +182,25 @@ function loadDrawing(objs){
             drawObject(obj);
         });
         setReady(`${objs.length} objects loaded. Ready!`);
-    }  
+    }
 }
 
 // Draw any object
-function drawObject(obj){
+function drawObject(obj) {
     if (obj.type == "line") {
         stroke(obj.color);
         strokeWeight(obj.size);
         line(obj.x, obj.y, obj.px, obj.py);
-    }
-    else if (obj.type == "text") {
+    } else if (obj.type == "text") {
         strokeWeight(0);
         fill(obj.color);
         textSize(Number(obj.size));
         text(obj.text, obj.x, obj.y);
-    }
-    else if(obj.type == "circle"){
+    } else if (obj.type == "circle") {
         strokeWeight(0);
         fill(obj.color);
         circle(obj.x, obj.y, obj.size);
-    }
-    else if(obj.type == "rectangle"){
+    } else if (obj.type == "rectangle") {
         strokeWeight(0);
         fill(obj.color);
         rect(Math.min(obj.start.x, obj.end.x), Math.min(obj.start.y, obj.end.y), Math.abs(obj.end.x - obj.start.x), Math.abs(obj.end.y - obj.start.y));

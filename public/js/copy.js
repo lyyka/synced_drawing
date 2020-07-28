@@ -1,7 +1,7 @@
-class CopyFunc{
-    constructor(){ }
+class CopyFunc {
+    constructor() {}
 
-    copy(toCopy, successCallback){
+    copy(toCopy, successCallback) {
         // Copy room code to clipboard
         const fallback = (text) => {
             const textArea = document.createElement("textarea");
