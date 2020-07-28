@@ -15,6 +15,12 @@ html, body{
     }
 }
 
+/* Help buttons */
+.help-btn{
+    width: 20px;
+    height: 20px;
+}
+
 /* Messages */
 #msgs-opts{
     max-height: 100%;

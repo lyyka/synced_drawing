@@ -18,7 +18,7 @@ function joinRoom(){
 
             // Set color and brush size
             $("#user_color").val(user.color);
-            $("#brush_size").val(user.brushSize);
+            $("#brush_size").val(user.size);
 
             // Update user color
             $("#user_color").on("change", (e) => {
@@ -29,8 +29,8 @@ function joinRoom(){
             // Update brush size
             $("#brush_size").on("change", (e) => {
                 const size = $(e.target).val();
-                if (size >= 1 && size <= 50) {
-                    user.brushSize = size;
+                if (size >= 1 && size <= 500) {
+                    user.size = size;
                 }
             });
 

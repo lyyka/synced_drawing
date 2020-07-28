@@ -29,14 +29,18 @@ block content
                         br
                         input(class="rounded shadow-sm border px-2 py-1" id="user_color" type="color")
                     .mb-4.d-inline-block.px-3.border-right
-                        label Brush/Text size
+                        label
+                            span Size
+                        img(src="/images/help.png" data-toggle="tooltip" data-placement="top" title="Size referes to the selected tool. Pen, text, circle radius, etc." class = "ml-2 help-btn" alt="Help")
                         br
-                        input(class="rounded shadow-sm border px-2 py-1" id="brush_size" type="number" min = "1" max = "50")
+                        input(class="rounded shadow-sm border px-2 py-1" id="brush_size" type="number" min = "1" max = "500")
                     .mb-4.d-inline-block.pl-3
                         label Tool
                         br
                         select(class="rounded shadow-sm border px-2 py-1" id="tool")
                             option(value="pen") ✏ Pen
+                            option(value="circle") 🔵 Circle
+                            option(value="rectangle") ⬛ Rectangle
                             option(value="text") ⌨ Text
                             option(value="eraser") ❌ Eraser
                     //- Canvas
@@ -47,6 +51,7 @@ block content
                         .mb-3.d-none
                             input(type="text" id = "add_text_input" class="rounded shadow-sm px-2 py-1 border bg-white" placeholder="Write text to add...")
                             p Click anywhere on canvas to add the text
+                        p#pos
                         p.text-muted#status 
                         button(id="clearCanvas" class = "rounded shadow-sm border px-2 py-1 text-white bg-space") Clear canvas
                 .col-xl-3
@@ -104,7 +109,11 @@ block scripts
     script(src="/js/qrcode/qrcode.min.js")
 
     //- P5 js
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+    script(src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js")
+
+    //- Bootstrap JS (for pop ups)
+    script(src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous")
 
     //- My js
     script(src="/js/copy.js")

@@ -26,8 +26,12 @@ const path = require("path");
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(() => {
+})
+.then(() => {
     console.log("Database connected");
+})
+.catch((err) => {
+    console.log(`Error ${err.message}`);
 });
 
 // Passport - for authentication

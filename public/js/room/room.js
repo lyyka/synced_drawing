@@ -19,7 +19,7 @@ function onReady(e){
     $("#room-code-text").click((e) => {
         const copyf = new CopyFunc();
         copyf.copy(room_code, () => {
-            $("#room-code-text").text("Copied");
+            $("#room-code-text").text("Copied!");
             window.setTimeout(function () {
                 $("#room-code-text").text(`#${room_code}`);
             }, 1000);
@@ -32,6 +32,9 @@ function onReady(e){
 
     // ON tool change, show text input for text opt
     $("#tool").on("change", updateToolEvent);
+
+    // Tooltips
+    $(".help-btn").tooltip();
 }
 
 function updateToolEvent(e){

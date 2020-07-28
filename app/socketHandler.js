@@ -56,7 +56,7 @@ class SocketHandler{
                 id: data.user_id,
                 username: data.username,
                 color: getRandomColor(),
-                brushSize: 5
+                size: 20
             };
             addUserToRoom(this.socket.room_code, user);
             this.socket.join(this.socket.room_code);
