@@ -31,7 +31,11 @@ block content
                     .mb-4.d-inline-block.px-3.border-right
                         label
                             span Size
-                        img(src="/images/help.png" data-toggle="tooltip" data-placement="top" title="Size referes to the selected tool. Pen, text, circle radius & eraser. Rectangle can be transformed freely." class = "ml-2 help-btn" alt="Help")
+                            svg(xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="top" title="Size referes to the selected tool. Pen, text, circle radius & eraser. Rectangle can be transformed freely." class="help-btn icon icon-tabler icon-tabler-help ml-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round")
+                                path(stroke="none" d="M0 0h24v24H0z")
+                                circle(cx="12" cy="12" r="9")
+                                line(x1="12" y1="17" x2="12" y2="17.01")
+                                path(d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4")
                         br
                         input(class="rounded shadow-sm border px-2 py-1" id="brush_size" type="number" min = "1" max = "500")
                     .mb-4.d-inline-block.pl-3

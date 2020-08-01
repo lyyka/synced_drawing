@@ -4,10 +4,11 @@ const {
     addMessageToRoom,
     updateCanvas,
     appendObjectToDrawing,
+    undo,
     clearCanvas,
     removeUserFromRoom,
     getRoom,
-    getUser
+    getUser,
 } = require("./data/Rooms");
 
 class SocketHandler {
@@ -23,6 +24,7 @@ class SocketHandler {
         this.handleMessageSent = this.handleMessageSent.bind(this);
         this.handleCanvasSizeChange = this.handleCanvasSizeChange.bind(this);
         this.handleNewObject = this.handleNewObject.bind(this);
+        this.handleUndo = this.handleUndo.bind(this);
         this.handleClearCanvas = this.handleClearCanvas.bind(this);
         this.handleGetDrawing = this.handleGetDrawing.bind(this);
     }
@@ -40,6 +42,7 @@ class SocketHandler {
         this.socket.on("sync_new_object", this.handleNewObject);
         this.socket.on("sync_clear_canvas", this.handleClearCanvas);
         this.socket.on("get_drawing", this.handleGetDrawing);
+        this.socket.on("undo_user_action", this.handleUndo);
 
         // Before leave
         this.socket.on("disconnecting", this.handleDisconnecting);
@@ -130,11 +133,12 @@ class SocketHandler {
         if (user) {
             // Validate if points for lines are still inside canvas
             let points_valid = true;
-            if(obj.type == "line"){
-                points_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <=room.canvasSize.h;              
+            if (obj.type == "line") {
+                points_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <= room.canvasSize.h;
             }
 
-            if(points_valid){
+            if (points_valid) {
+                obj.user_id = this.socket.auth_user_id;
                 appendObjectToDrawing(obj, this.socket.room_code);
                 this.io.in(this.socket.room_code).emit("object_received", obj);
             }
@@ -148,13 +152,26 @@ class SocketHandler {
         callback();
     }
 
-    // Returns all ines to user
+    // Returns whole drawing to user
     handleGetDrawing(callback) {
         const room = getRoom(this.socket.room_code);
         if (room) {
             callback(room.drawing);
         } else {
             callback(undefined);
+        }
+    }
+
+    // Undo action - remove last object user placed
+    handleUndo(callback) {
+        let done = undo(this.socket.room_code, this.socket.auth_user_id);
+        if(done){
+            const room = getRoom(this.socket.room_code);
+            if (room) {
+                callback(room.drawing);
+            } else {
+                callback(undefined);
+            }
         }
     }
 

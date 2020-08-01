@@ -43,6 +43,21 @@ function setup() {
         syncClearCanvas();
     });
 
+    // Undo action
+    $(document).keydown(function(e){
+        if(user){
+            if(e.which === 90 && e.ctrlKey){
+                socket.emit("undo_user_action", (drawing) => {
+                    if(drawing){
+                        clear();
+                        all = drawing;
+                        loadDrawing(drawing);
+                    }
+                });
+            }
+        }
+    });
+
     // Set background to white
     background(255);
 }

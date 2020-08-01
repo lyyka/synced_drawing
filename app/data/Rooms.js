@@ -50,6 +50,22 @@ function appendObjectToDrawing(obj, roomId) {
     }
 }
 
+// Undo action 
+function undo(roomId, userId){
+    const room = rooms[roomId];
+    if(room){
+        let found = false;
+        for(let i = room.drawing.length - 1; i >= 0 && !found; i--){
+            if(room.drawing[i].user_id == userId){
+                room.drawing.splice(i, 1);
+                found = true;
+            }
+        }
+        return found;
+    }
+    return false;
+}
+
 // Clear canvas
 function clearCanvas(roomId) {
     if (rooms[roomId]) {
@@ -90,6 +106,7 @@ module.exports = {
     addMessageToRoom,
     updateCanvas,
     appendObjectToDrawing,
+    undo,
     clearCanvas,
     removeUserFromRoom,
     getRoom,
