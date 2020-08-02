@@ -1,1 +1,0 @@
-[ ] Fix mobile rectangle draw issue.
