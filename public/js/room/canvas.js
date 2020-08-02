@@ -5,16 +5,14 @@ let objs = [];
 let all = [];
 
 // For rectangle drag draw
-let start;
+let rect_start;
+let line_start;
 
 function setup() {
     // Create canvas
     let cnv = createCanvas(canvas_size.w, canvas_size.h);
     cnv.parent("canvas");
     cnv.mouseClicked(onMouseClick);
-
-    // cnv.mousePressed(onMousePressed);
-    // cnv.touchStarted(onMousePressed);
 
     cnv.touchMoved(mouseDragged);
 
@@ -65,15 +63,14 @@ function setup() {
             $(this).parent().hide();
         }
     }
-    $(document).keydown((e) => {
-        // Undo
-        if (e.which === 90 && e.ctrlKey) {
-            undoAction();
-        }
-        // Save
-        else if ((e.which == 115 && e.ctrlKey) || e.which == 19) {
-            saveAction();
-        }
+    // Bind actions
+    // Undo
+    bindAction(undoAction, (e) => {
+        return e.which === 90 && e.ctrlKey;
+    });
+    // Save
+    bindAction(saveAction, (e) => {
+        return (e.which == 83 && e.ctrlKey) || e.which == 19;
     });
     $("#undo").click(undoAction);
     $("#save-as").click(saveAction);
@@ -111,7 +108,7 @@ function onMouseClick() {
         } else {
             inp.focus();
         }
-    } else if (tool == "circle") {
+    } else if (tool == "circle") { // Add circle to canvas
         const data = {
             x: mouseX,
             y: mouseY,
@@ -119,30 +116,16 @@ function onMouseClick() {
             size: user.size,
             type: "circle"
         }
-        if (data.x >= 0 && data.y >= 0) {
-            syncNewObject(data);
-        }
+        syncNewObject(data);
     }
 }
 
-// function onMousePressed() {
-//     const tool = $("#tool").val();
-//     // On press, begin rectangle drag draw
-//     if (tool == "rectangle" && !start) {
-//         start = {
-//             x: mouseX,
-//             y: mouseY
-//         };
-//     }
-//     return false;
-// }
-
 function onMouseReleased() {
     const tool = $("#tool").val();
-    // Save release coords for drawing rect
-    if (tool == "rectangle" && start) {
+    // Add rectangle to canvas
+    if (tool == "rectangle" && rect_start) {
         const data = {
-            start: start,
+            start: rect_start,
             end: {
                 x: mouseX,
                 y: mouseY
@@ -151,8 +134,20 @@ function onMouseReleased() {
             size: user.size,
             type: "rectangle"
         }
-        start = undefined;
+        rect_start = undefined;
         syncNewObject(data);
+    } else if (tool == "line" && line_start){ // Add straight line to canvas
+        const obj = {
+            x: line_start.x,
+            y: line_start.y,
+            px: mouseX,
+            py: mouseY,
+            color: user.color,
+            size: user.size,
+            type: "line"
+        };
+        line_start = undefined;
+        syncNewObject(obj);
     }
 }
 
@@ -167,7 +162,7 @@ function onMouseMove() {
     // If it's text, draw guidelines instead of circle
     stroke(0);
     strokeWeight(2);
-    if (tool == "text") {
+    if (tool == "text") { // Render text guidelines
         const size = Number(user.size);
         const to_render = $("#add_text_input").val();
         let width = size;
@@ -178,7 +173,7 @@ function onMouseMove() {
         const height = size * 0.75;
         line(mouseX, mouseY, mouseX + width, mouseY);
         line(mouseX, mouseY, mouseX, mouseY - height);
-    } else {
+    } else { // Draw circle guide for anything other then a text
         // Fill the guiding circle if we are going to draw a circle
         if (tool == "circle") {
             fill(user.color);
@@ -195,6 +190,7 @@ function mouseDragged() {
     const csize = getCanvasSize();
     if (mouseX >= 0 && mouseX <= csize.w && mouseY >= 0 && mouseY <= csize.h) {
         const tool = $("#tool").val();
+        // Draw with pen/eraser on canvas
         if (tool == "pen" || tool == "eraser") {
             const obj = {
                 x: mouseX,
@@ -207,9 +203,9 @@ function mouseDragged() {
             };
             syncNewObject(obj);
 
-        } else if (tool == "rectangle") {
-            if(!start){
-                start = {
+        } else if (tool == "rectangle") { // Live-draw rect
+            if (!rect_start) {
+                rect_start = {
                     x: mouseX,
                     y: mouseY
                 }
@@ -217,7 +213,18 @@ function mouseDragged() {
             // Real-time draw rect while dragging, mouseMove takes care of clearing/redrawing canvas
             fill(user.color);
             strokeWeight(0);
-            rect(Math.min(start.x, mouseX), Math.min(start.y, mouseY), Math.abs(mouseX - start.x), Math.abs(mouseY - start.y));
+            rect(Math.min(rect_start.x, mouseX), Math.min(rect_start.y, mouseY), Math.abs(mouseX - rect_start.x), Math.abs(mouseY - rect_start.y));
+        } else if (tool == "line") { // Live-draw straight line
+            if(!line_start){
+                line_start = {
+                    x: mouseX,
+                    y: mouseY
+                }
+            }
+            // Real-time draw startign line while dragging, mouseMove takes care of clearing/redrawing canvas
+            stroke(user.color);
+            strokeWeight(user.size);
+            line(mouseX, mouseY, line_start.x, line_start.y);
         }
     }
 

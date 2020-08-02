@@ -135,8 +135,7 @@ class SocketHandler {
             let obj_valid = true;
             if (obj.type == "line" || obj.type == "text" || obj.type == "cirlce") {
                 obj_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <= room.canvasSize.h;
-            }
-            else if (obj.type == "rectangle"){
+            } else if (obj.type == "rectangle") {
                 obj_valid = obj.start.x >= 0 && obj.start.x <= room.canvasSize.w && obj.start.y >= 0 && obj.start.y <= room.canvasSize.h && obj.end.x >= 0 && obj.end.x <= room.canvasSize.w && obj.end.y >= 0 && obj.end.y <= room.canvasSize.h;
             }
 
@@ -168,7 +167,7 @@ class SocketHandler {
     // Undo action - remove last object user placed
     handleUndo(callback) {
         let done = undo(this.socket.room_code, this.socket.auth_user_id);
-        if(done){
+        if (done) {
             const room = getRoom(this.socket.room_code);
             if (room) {
                 callback(room.drawing);
