@@ -13,8 +13,8 @@ function setup() {
     cnv.parent("canvas");
     cnv.mouseClicked(onMouseClick);
 
-    cnv.mousePressed(onMousePressed);
-    cnv.touchStarted(onMousePressed);
+    // cnv.mousePressed(onMousePressed);
+    // cnv.touchStarted(onMousePressed);
 
     cnv.touchMoved(mouseDragged);
 
@@ -45,33 +45,33 @@ function setup() {
 
     // Undo action
     const undoAction = (e = undefined) => {
-        if(user){
+        if (user) {
             socket.emit("undo_user_action", (drawing) => {
-                if(drawing){
+                if (drawing) {
                     clear();
                     all = drawing;
                     loadDrawing(drawing);
                 }
             });
         }
-        if(e){ // Event came from mouse click
+        if (e) { // Event came from mouse click
             $(this).parent().hide();
         }
     }
     // Save action
     const saveAction = (e = undefined) => {
         save(cnv, `${room_code} - canvas drawing`);
-        if(e){ // event came from mouse click
+        if (e) { // event came from mouse click
             $(this).parent().hide();
         }
     }
     $(document).keydown((e) => {
         // Undo
-        if(e.which === 90 && e.ctrlKey){
+        if (e.which === 90 && e.ctrlKey) {
             undoAction();
         }
         // Save
-        else if((e.which == 115 && e.ctrlKey) || e.which == 19){
+        else if ((e.which == 115 && e.ctrlKey) || e.which == 19) {
             saveAction();
         }
     });
@@ -125,19 +125,17 @@ function onMouseClick() {
     }
 }
 
-function onMousePressed() {
-    const tool = $("#tool").val();
-    // On press, begin rectangle drag draw
-    if (tool == "rectangle" && !start) {
-        start = {
-            x: mouseX,
-            y: mouseY
-        };
-    }
-    else if(tool == "pen" || tool=="eraser")
-
-    return false;
-}
+// function onMousePressed() {
+//     const tool = $("#tool").val();
+//     // On press, begin rectangle drag draw
+//     if (tool == "rectangle" && !start) {
+//         start = {
+//             x: mouseX,
+//             y: mouseY
+//         };
+//     }
+//     return false;
+// }
 
 function onMouseReleased() {
     const tool = $("#tool").val();
@@ -156,16 +154,6 @@ function onMouseReleased() {
         start = undefined;
         syncNewObject(data);
     }
-    else if(tool == "pen" || tool == "eraser"){
-        // syncNewObject({
-        //     points: current_line,
-        //     color: tool == "pen" ? user.color : "#ffffff",
-        //     size: user.size,
-        //     type: "line"
-        // });
-        // // Reset the array to start drawing new line
-        // current_line = [];
-    }
 }
 
 function onMouseMove() {
@@ -183,7 +171,7 @@ function onMouseMove() {
         const size = Number(user.size);
         const to_render = $("#add_text_input").val();
         let width = size;
-        if(to_render.trim().length > 0){
+        if (to_render.trim().length > 0) {
             textSize(size);
             width = textWidth();
         }
@@ -208,12 +196,6 @@ function mouseDragged() {
     if (mouseX >= 0 && mouseX <= csize.w && mouseY >= 0 && mouseY <= csize.h) {
         const tool = $("#tool").val();
         if (tool == "pen" || tool == "eraser") {
-            // current_line.push({
-            //     x: mouseX,
-            //     y: mouseY,
-            //     px: pmouseX,
-            //     py: pmouseY,
-            // });
             const obj = {
                 x: mouseX,
                 y: mouseY,
@@ -225,7 +207,13 @@ function mouseDragged() {
             };
             syncNewObject(obj);
 
-        } else if (tool == "rectangle" && start) {
+        } else if (tool == "rectangle") {
+            if(!start){
+                start = {
+                    x: mouseX,
+                    y: mouseY
+                }
+            }
             // Real-time draw rect while dragging, mouseMove takes care of clearing/redrawing canvas
             fill(user.color);
             strokeWeight(0);
@@ -262,9 +250,6 @@ function drawObject(obj) {
     if (obj.type == "line") {
         stroke(obj.color);
         strokeWeight(obj.size);
-        // obj.points.forEach(point => {
-        //     line(point.x, point.y, point.px, point.py);
-        // });
         line(obj.x, obj.y, obj.px, obj.py);
     } else if (obj.type == "text") {
         strokeWeight(0);

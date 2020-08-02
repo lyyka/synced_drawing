@@ -132,15 +132,15 @@ class SocketHandler {
         const room = getRoom(this.socket.room_code);
         if (user) {
             // Validate if points for lines are still inside canvas
-            let points_valid = true;
-            if (obj.type == "line") {
-                // obj.points.forEach(point => {
-                //     points_valid = point.x >= 0 && point.x <= room.canvasSize.w && point.y >= 0 && point.y <= room.canvasSize.h;
-                // });
-                points_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <= room.canvasSize.h;
+            let obj_valid = true;
+            if (obj.type == "line" || obj.type == "text" || obj.type == "cirlce") {
+                obj_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <= room.canvasSize.h;
+            }
+            else if (obj.type == "rectangle"){
+                obj_valid = obj.start.x >= 0 && obj.start.x <= room.canvasSize.w && obj.start.y >= 0 && obj.start.y <= room.canvasSize.h && obj.end.x >= 0 && obj.end.x <= room.canvasSize.w && obj.end.y >= 0 && obj.end.y <= room.canvasSize.h;
             }
 
-            if (points_valid) {
+            if (obj_valid) {
                 obj.user_id = this.socket.auth_user_id;
                 appendObjectToDrawing(obj, this.socket.room_code);
                 this.io.in(this.socket.room_code).emit("object_received", obj);
