@@ -19,6 +19,20 @@ block content
             .row
                 .col-xl-9.mb-4
                     .mb-4.d-inline-block.pr-3.border-right
+                        label Actions
+                        br
+                        div(class="rounded shadow-sm px-2 py-1 border cp custom-dd position-relative")
+                            span.active-opt Choose action...
+                            span.ml-3
+                                i.fas.fa-angle-down
+                            div.position-absolute.dd-opts.w-100.bg-white.border.rounded
+                                #save-as.opt.border-bottom.py-1.px-2
+                                    span Save 
+                                    span.text-muted (Ctrl + S)
+                                #undo.opt.py-1.px-2
+                                    span Undo 
+                                    span.text-muted (Ctrl + Z)
+                    .mb-4.d-inline-block.px-3.border-right
                         label Canvas size
                         br
                         input(class="rounded shadow-sm border px-2 py-1" id="canvas_w" type="number" min = "100" max="10000" placeholder = "Width" value = `${room.canvasSize.w}`)
@@ -108,6 +122,9 @@ block scripts
                 global: 1800
             }
         });
+    
+    //- Custom dropdown js
+    script(src="/js/custom_dd.js")
 
     //- QR Code lib
     script(src="/js/qrcode/qrcode.min.js")

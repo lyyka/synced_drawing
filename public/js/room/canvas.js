@@ -1,4 +1,4 @@
-let lines = [];
+let current_line = [];
 let objs = [];
 
 // Holds ALL the object (loaded + drawn) so we an redraw them on mouse move
@@ -44,19 +44,39 @@ function setup() {
     });
 
     // Undo action
-    $(document).keydown(function(e){
+    const undoAction = (e = undefined) => {
         if(user){
-            if(e.which === 90 && e.ctrlKey){
-                socket.emit("undo_user_action", (drawing) => {
-                    if(drawing){
-                        clear();
-                        all = drawing;
-                        loadDrawing(drawing);
-                    }
-                });
-            }
+            socket.emit("undo_user_action", (drawing) => {
+                if(drawing){
+                    clear();
+                    all = drawing;
+                    loadDrawing(drawing);
+                }
+            });
+        }
+        if(e){ // Event came from mouse click
+            $(this).parent().hide();
+        }
+    }
+    // Save action
+    const saveAction = (e = undefined) => {
+        save(cnv, `${room_code} - canvas drawing`);
+        if(e){ // event came from mouse click
+            $(this).parent().hide();
+        }
+    }
+    $(document).keydown((e) => {
+        // Undo
+        if(e.which === 90 && e.ctrlKey){
+            undoAction();
+        }
+        // Save
+        else if((e.which == 115 && e.ctrlKey) || e.which == 19){
+            saveAction();
         }
     });
+    $("#undo").click(undoAction);
+    $("#save-as").click(saveAction);
 
     // Set background to white
     background(255);
@@ -114,6 +134,7 @@ function onMousePressed() {
             y: mouseY
         };
     }
+    else if(tool == "pen" || tool=="eraser")
 
     return false;
 }
@@ -134,6 +155,16 @@ function onMouseReleased() {
         }
         start = undefined;
         syncNewObject(data);
+    }
+    else if(tool == "pen" || tool == "eraser"){
+        // syncNewObject({
+        //     points: current_line,
+        //     color: tool == "pen" ? user.color : "#ffffff",
+        //     size: user.size,
+        //     type: "line"
+        // });
+        // // Reset the array to start drawing new line
+        // current_line = [];
     }
 }
 
@@ -177,7 +208,13 @@ function mouseDragged() {
     if (mouseX >= 0 && mouseX <= csize.w && mouseY >= 0 && mouseY <= csize.h) {
         const tool = $("#tool").val();
         if (tool == "pen" || tool == "eraser") {
-            let data = {
+            // current_line.push({
+            //     x: mouseX,
+            //     y: mouseY,
+            //     px: pmouseX,
+            //     py: pmouseY,
+            // });
+            const obj = {
                 x: mouseX,
                 y: mouseY,
                 px: pmouseX,
@@ -186,7 +223,8 @@ function mouseDragged() {
                 size: user.size,
                 type: "line"
             };
-            syncNewObject(data);
+            syncNewObject(obj);
+
         } else if (tool == "rectangle" && start) {
             // Real-time draw rect while dragging, mouseMove takes care of clearing/redrawing canvas
             fill(user.color);
@@ -224,6 +262,9 @@ function drawObject(obj) {
     if (obj.type == "line") {
         stroke(obj.color);
         strokeWeight(obj.size);
+        // obj.points.forEach(point => {
+        //     line(point.x, point.y, point.px, point.py);
+        // });
         line(obj.x, obj.y, obj.px, obj.py);
     } else if (obj.type == "text") {
         strokeWeight(0);

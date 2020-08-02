@@ -24,11 +24,18 @@ body {
     }
 }
 
-/* Help buttons */
-/* .help-btn {
-    width: 20px;
-    height: 20px;
-} */
+/* Custom dropdown */
+.dd-opts{
+    top: 34;
+    left: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1;
+}
+.opt:hover{
+    background-color: #EFEFEF;
+}
 
 /* Messages */
 #msgs-opts {

@@ -134,6 +134,9 @@ class SocketHandler {
             // Validate if points for lines are still inside canvas
             let points_valid = true;
             if (obj.type == "line") {
+                // obj.points.forEach(point => {
+                //     points_valid = point.x >= 0 && point.x <= room.canvasSize.w && point.y >= 0 && point.y <= room.canvasSize.h;
+                // });
                 points_valid = obj.x >= 0 && obj.x <= room.canvasSize.w && obj.y >= 0 && obj.y <= room.canvasSize.h;
             }
 
