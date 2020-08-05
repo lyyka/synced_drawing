@@ -1,0 +1,24 @@
+footer.mt-5.py-5.bg-tgreen
+    .container
+        .row
+            .col-lg-6.mb-5
+                h3 Synced Drawing
+                if user
+                    a(href="/users/dashboard" class="text-dark mb-3") Dashboard
+                    br
+                    a(href="/rooms/join" class="text-dark mb-3") Join Room
+                    br
+                    a(href="/rooms/create" class="text-dark mb-3") Create Room
+                    br
+                    a(href="/auth/logout" class="text-dark mb-3") Log out
+                else
+                    a(href="/auth/login" class="text-dark mb-3") Log in
+                    br
+                    a(href="/auth/register" class="text-dark mb-3") Register
+            .col-lg-6.text-center
+                p Made by 
+                    span(class = "text-space font-weight-bold") Luka Robajac
+                p.mb-1
+                    a(href="http://lyyka.github.io/portfolio" class = "text-space") Portfolio Website
+                p.mb-1
+                    a(href="https://www.github.com/lyyka" class = "text-space") GitHub

@@ -166,7 +166,6 @@ function onMouseReleased() {
 }
 
 function onMouseMove() {
-    $("#pos").text(`Position: ${mouseX}, ${mouseY}`);
     const tool = $("#tool").val();
     // clear bg
     background(255);
@@ -187,6 +186,9 @@ function onMouseMove() {
         const height = size * 0.75;
         line(mouseX, mouseY, mouseX + width, mouseY);
         line(mouseX, mouseY, mouseX, mouseY - height);
+    } else if(tool == "rectangle" || tool == "ellipse"){
+        line(mouseX - 10, mouseY, mouseX + 10, mouseY);
+        line(mouseX, mouseY - 10, mouseX, mouseY + 10);
     } else { // Draw circle guide for anything other then a text
         // Fill the guiding circle if we are going to draw a circle
         if (tool == "circle") {
