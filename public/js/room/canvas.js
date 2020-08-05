@@ -37,6 +37,13 @@ function setup() {
         clear();
     });
 
+    // When someone redos the action, redraw canvas
+    socket.on("redraw_canvas", (drawing) => {
+        all = [];
+        clear();
+        loadDrawing(drawing);
+    });
+
     // Clear the canvas
     $("#clearCanvas").click((e) => {
         syncClearCanvas();
@@ -57,6 +64,21 @@ function setup() {
             $(this).parent().hide();
         }
     }
+    // Redo action
+    const redoAction = (e = undefined) => {
+        if (user) {
+            socket.emit("redo_user_action", (drawing) => {
+                if (drawing) {
+                    clear();
+                    all = drawing;
+                    loadDrawing(drawing);
+                }
+            });
+        }
+        if (e) { // Event came from mouse click
+            $(this).parent().hide();
+        }
+    }
     // Save action
     const saveAction = (e = undefined) => {
         save(cnv, `${room_code} - canvas drawing`);
@@ -64,16 +86,22 @@ function setup() {
             $(this).parent().hide();
         }
     }
+
     // Bind actions
     // Undo
     bindAction(undoAction, (e) => {
         return e.which === 90 && e.ctrlKey;
+    });
+    // Redo
+    bindAction(redoAction, (e) => {
+        return e.which === 65 && e.ctrlKey;
     });
     // Save
     bindAction(saveAction, (e) => {
         return (e.which == 83 && e.ctrlKey) || e.which == 19;
     });
     $("#undo").click(undoAction);
+    $("#redo").click(redoAction);
     $("#save-as").click(saveAction);
 
     // Set background to white

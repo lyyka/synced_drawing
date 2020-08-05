@@ -5,6 +5,7 @@ const {
     updateCanvas,
     appendObjectToDrawing,
     undo,
+    redo,
     clearCanvas,
     removeUserFromRoom,
     getRoom,
@@ -25,6 +26,7 @@ class SocketHandler {
         this.handleCanvasSizeChange = this.handleCanvasSizeChange.bind(this);
         this.handleNewObject = this.handleNewObject.bind(this);
         this.handleUndo = this.handleUndo.bind(this);
+        this.handleRedo = this.handleRedo.bind(this);
         this.handleClearCanvas = this.handleClearCanvas.bind(this);
         this.handleGetDrawing = this.handleGetDrawing.bind(this);
     }
@@ -43,6 +45,7 @@ class SocketHandler {
         this.socket.on("sync_clear_canvas", this.handleClearCanvas);
         this.socket.on("get_drawing", this.handleGetDrawing);
         this.socket.on("undo_user_action", this.handleUndo);
+        this.socket.on("redo_user_action", this.handleRedo);
 
         // Before leave
         this.socket.on("disconnecting", this.handleDisconnecting);
@@ -169,11 +172,15 @@ class SocketHandler {
         let done = undo(this.socket.room_code, this.socket.auth_user_id);
         if (done) {
             const room = getRoom(this.socket.room_code);
-            if (room) {
-                callback(room.drawing);
-            } else {
-                callback(undefined);
-            }
+            this.io.in(this.socket.room_code).emit("redraw_canvas", room.drawing);
+        }
+    }
+
+    // Redo action - add last object user has undone to room drawing
+    handleRedo(callback) {
+        let done = redo(this.socket.room_code, this.socket.auth_user_id);
+        if (done.success && done.obj) {
+            this.io.in(this.socket.room_code).emit("object_received", done.obj);
         }
     }
 

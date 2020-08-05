@@ -3,6 +3,7 @@
 // NodeJS automatically caches modules, so each time we require this module, it will return reference to the first object that is now cached. It will NOT create new copies of the module.
 // That's why rooms are not cleared when we require this module in RoomsController and socketHandler.
 let rooms = [];
+let undone_objects = [];
 
 // Checks if the given room exists
 function roomExists(roomId) {
@@ -57,11 +58,34 @@ function undo(roomId, userId) {
         let found = false;
         for (let i = room.drawing.length - 1; i >= 0 && !found; i--) {
             if (room.drawing[i].user_id == userId) {
+                undone_objects.push(room.drawing[i]);
                 room.drawing.splice(i, 1);
                 found = true;
             }
         }
         return found;
+    }
+    return false;
+}
+
+// Redo action
+function redo(roomId, userId) {
+    const room = rooms[roomId];
+    if (room) {
+        let found = false;
+        let obj = undefined;
+        for (let i = undone_objects.length - 1; i >= 0 && !found; i--) {
+            if (undone_objects[i].user_id == userId) {
+                obj = undone_objects[i];
+                room.drawing.push(undone_objects[i]);
+                undone_objects.splice(i, 1);
+                found = true;
+            }
+        }
+        return {
+            success: found,
+            obj: obj
+        };
     }
     return false;
 }
@@ -107,6 +131,7 @@ module.exports = {
     updateCanvas,
     appendObjectToDrawing,
     undo,
+    redo,
     clearCanvas,
     removeUserFromRoom,
     getRoom,
