@@ -7,6 +7,7 @@ let all = [];
 // For rectangle drag draw
 let rect_start;
 let line_start;
+let ellipse_start;
 
 function setup() {
     // Create canvas
@@ -136,6 +137,19 @@ function onMouseReleased() {
         }
         rect_start = undefined;
         syncNewObject(data);
+    } else if(tool == "ellipse" && ellipse_start){
+        const data = {
+            center: {
+                x: (ellipse_start.x + mouseX) / 2,
+                y: (ellipse_start.y + mouseY) / 2
+            },
+            w: Math.abs(ellipse_start.x - mouseX),
+            h: Math.abs(ellipse_start.y - mouseY),
+            type: "ellipse",
+            color: user.color
+        }
+        ellipse_start = undefined;
+        syncNewObject(data);
     } else if (tool == "line" && line_start){ // Add straight line to canvas
         const obj = {
             x: line_start.x,
@@ -214,6 +228,17 @@ function mouseDragged() {
             fill(user.color);
             strokeWeight(0);
             rect(Math.min(rect_start.x, mouseX), Math.min(rect_start.y, mouseY), Math.abs(mouseX - rect_start.x), Math.abs(mouseY - rect_start.y));
+        } else if (tool == "ellipse"){
+            if(!ellipse_start){
+                ellipse_start = {
+                    x: mouseX,
+                    y: mouseY
+                }
+            }
+
+            fill(user.color);
+            strokeWeight(0);
+            ellipse((ellipse_start.x + mouseX) / 2, (ellipse_start.y + mouseY) / 2, Math.abs(mouseX - ellipse_start.x), Math.abs(mouseY - ellipse_start.y));
         } else if (tool == "line") { // Live-draw straight line
             if(!line_start){
                 line_start = {
@@ -267,6 +292,10 @@ function drawObject(obj) {
         strokeWeight(0);
         fill(obj.color);
         circle(obj.x, obj.y, obj.size);
+    } else if(obj.type == "ellipse"){
+        strokeWeight(0);
+        fill(obj.color);
+        ellipse(obj.center.x, obj.center.y, obj.w, obj.h);
     } else if (obj.type == "rectangle") {
         strokeWeight(0);
         fill(obj.color);

@@ -45,7 +45,7 @@ block content
                     .mb-4.d-inline-block.px-3.border-right
                         label
                             span Size
-                            svg(xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="top" title="Size referes to the selected tool. Pen, text, circle radius & eraser. Rectangle can be transformed freely." class="help-btn icon icon-tabler icon-tabler-help ml-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round")
+                            svg(xmlns="http://www.w3.org/2000/svg" data-toggle="tooltip" data-placement="top" title="Size referes to the selected tool, except the ones that can be transformed freely." class="help-btn icon icon-tabler icon-tabler-help ml-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round")
                                 path(stroke="none" d="M0 0h24v24H0z")
                                 circle(cx="12" cy="12" r="9")
                                 line(x1="12" y1="17" x2="12" y2="17.01")
@@ -58,7 +58,8 @@ block content
                         select(class="rounded shadow-sm border px-2 py-1" id="tool")
                             option(value="pen") ✏ Pen
                             option(value="line") ➖ Line
-                            option(value="circle") 🔵 Circle
+                            option(value="ellipse") 🔵 Ellipse
+                            option(value="circle") ⚫ Circle
                             option(value="rectangle") ⬛ Rectangle
                             option(value="text") ⌨ Text
                             option(value="eraser") ❌ Eraser
